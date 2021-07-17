@@ -45,7 +45,7 @@ module.exports.sockets = {
             session.users[socketId] = user;
 
             // Persist the session
-            session.save();
+            //session.save();
 
             // Get updates about users being created
             User.watch(socket);
