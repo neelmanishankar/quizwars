@@ -97,7 +97,7 @@ var QW_MODULES = (function (modules, $) {
 				}
 			});
 
-		    if( readyPlayers > 1 ) {
+		    if( readyPlayers >= 1 ) {
 		        $('#startQuiz').removeAttr('disabled');
 		    }
 		    else {
