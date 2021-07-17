@@ -1,8 +1,42 @@
-/*! Socket.IO.min.js build:0.9.16, production. Copyright(c) 2011 LearnBoost <dev@learnboost.com> MIT Licensed */
-var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){var c=a;c.version="0.9.16",c.protocol=1,c.transports=[],c.j=[],c.sockets={},c.connect=function(a,d){var e=c.util.parseUri(a),f,g;b&&b.location&&(e.protocol=e.protocol||b.location.protocol.slice(0,-1),e.host=e.host||(b.document?b.document.domain:b.location.hostname),e.port=e.port||b.location.port),f=c.util.uniqueUri(e);var h={host:e.host,secure:"https"==e.protocol,port:e.port||("https"==e.protocol?443:80),query:e.query||""};c.util.merge(h,d);if(h["force new connection"]||!c.sockets[f])g=new c.Socket(h);return!h["force new connection"]&&g&&(c.sockets[f]=g),g=g||c.sockets[f],g.of(e.path.length>1?e.path:"")}})("object"==typeof module?module.exports:this.io={},this),function(a,b){var c=a.util={},d=/^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/,e=["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"];c.parseUri=function(a){var b=d.exec(a||""),c={},f=14;while(f--)c[e[f]]=b[f]||"";return c},c.uniqueUri=function(a){var c=a.protocol,d=a.host,e=a.port;return"document"in b?(d=d||document.domain,e=e||(c=="https"&&document.location.protocol!=="https:"?443:document.location.port)):(d=d||"localhost",!e&&c=="https"&&(e=443)),(c||"http")+"://"+d+":"+(e||80)},c.query=function(a,b){var d=c.chunkQuery(a||""),e=[];c.merge(d,c.chunkQuery(b||""));for(var f in d)d.hasOwnProperty(f)&&e.push(f+"="+d[f]);return e.length?"?"+e.join("&"):""},c.chunkQuery=function(a){var b={},c=a.split("&"),d=0,e=c.length,f;for(;d<e;++d)f=c[d].split("="),f[0]&&(b[f[0]]=f[1]);return b};var f=!1;c.load=function(a){if("document"in b&&document.readyState==="complete"||f)return a();c.on(b,"load",a,!1)},c.on=function(a,b,c,d){a.attachEvent?a.attachEvent("on"+b,c):a.addEventListener&&a.addEventListener(b,c,d)},c.request=function(a){if(a&&"undefined"!=typeof XDomainRequest&&!c.ua.hasCORS)return new XDomainRequest;if("undefined"!=typeof XMLHttpRequest&&(!a||c.ua.hasCORS))return new XMLHttpRequest;if(!a)try{return new(window[["Active"].concat("Object").join("X")])("Microsoft.XMLHTTP")}catch(b){}return null},"undefined"!=typeof window&&c.load(function(){f=!0}),c.defer=function(a){if(!c.ua.webkit||"undefined"!=typeof importScripts)return a();c.load(function(){setTimeout(a,100)})},c.merge=function(b,d,e,f){var g=f||[],h=typeof e=="undefined"?2:e,i;for(i in d)d.hasOwnProperty(i)&&c.indexOf(g,i)<0&&(typeof b[i]!="object"||!h?(b[i]=d[i],g.push(d[i])):c.merge(b[i],d[i],h-1,g));return b},c.mixin=function(a,b){c.merge(a.prototype,b.prototype)},c.inherit=function(a,b){function c(){}c.prototype=b.prototype,a.prototype=new c},c.isArray=Array.isArray||function(a){return Object.prototype.toString.call(a)==="[object Array]"},c.intersect=function(a,b){var d=[],e=a.length>b.length?a:b,f=a.length>b.length?b:a;for(var g=0,h=f.length;g<h;g++)~c.indexOf(e,f[g])&&d.push(f[g]);return d},c.indexOf=function(a,b,c){for(var d=a.length,c=c<0?c+d<0?0:c+d:c||0;c<d&&a[c]!==b;c++);return d<=c?-1:c},c.toArray=function(a){var b=[];for(var c=0,d=a.length;c<d;c++)b.push(a[c]);return b},c.ua={},c.ua.hasCORS="undefined"!=typeof XMLHttpRequest&&function(){try{var a=new XMLHttpRequest}catch(b){return!1}return a.withCredentials!=undefined}(),c.ua.webkit="undefined"!=typeof navigator&&/webkit/i.test(navigator.userAgent),c.ua.iDevice="undefined"!=typeof navigator&&/iPad|iPhone|iPod/i.test(navigator.userAgent)}("undefined"!=typeof io?io:module.exports,this),function(a,b){function c(){}a.EventEmitter=c,c.prototype.on=function(a,c){return this.$events||(this.$events={}),this.$events[a]?b.util.isArray(this.$events[a])?this.$events[a].push(c):this.$events[a]=[this.$events[a],c]:this.$events[a]=c,this},c.prototype.addListener=c.prototype.on,c.prototype.once=function(a,b){function d(){c.removeListener(a,d),b.apply(this,arguments)}var c=this;return d.listener=b,this.on(a,d),this},c.prototype.removeListener=function(a,c){if(this.$events&&this.$events[a]){var d=this.$events[a];if(b.util.isArray(d)){var e=-1;for(var f=0,g=d.length;f<g;f++)if(d[f]===c||d[f].listener&&d[f].listener===c){e=f;break}if(e<0)return this;d.splice(e,1),d.length||delete this.$events[a]}else(d===c||d.listener&&d.listener===c)&&delete this.$events[a]}return this},c.prototype.removeAllListeners=function(a){return a===undefined?(this.$events={},this):(this.$events&&this.$events[a]&&(this.$events[a]=null),this)},c.prototype.listeners=function(a){return this.$events||(this.$events={}),this.$events[a]||(this.$events[a]=[]),b.util.isArray(this.$events[a])||(this.$events[a]=[this.$events[a]]),this.$events[a]},c.prototype.emit=function(a){if(!this.$events)return!1;var c=this.$events[a];if(!c)return!1;var d=Array.prototype.slice.call(arguments,1);if("function"==typeof c)c.apply(this,d);else{if(!b.util.isArray(c))return!1;var e=c.slice();for(var f=0,g=e.length;f<g;f++)e[f].apply(this,d)}return!0}}("undefined"!=typeof io?io:module.exports,"undefined"!=typeof io?io:module.parent.exports),function(exports,nativeJSON){function f(a){return a<10?"0"+a:a}function date(a,b){return isFinite(a.valueOf())?a.getUTCFullYear()+"-"+f(a.getUTCMonth()+1)+"-"+f(a.getUTCDate())+"T"+f(a.getUTCHours())+":"+f(a.getUTCMinutes())+":"+f(a.getUTCSeconds())+"Z":null}function quote(a){return escapable.lastIndex=0,escapable.test(a)?'"'+a.replace(escapable,function(a){var b=meta[a];return typeof b=="string"?b:"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)})+'"':'"'+a+'"'}function str(a,b){var c,d,e,f,g=gap,h,i=b[a];i instanceof Date&&(i=date(a)),typeof rep=="function"&&(i=rep.call(b,a,i));switch(typeof i){case"string":return quote(i);case"number":return isFinite(i)?String(i):"null";case"boolean":case"null":return String(i);case"object":if(!i)return"null";gap+=indent,h=[];if(Object.prototype.toString.apply(i)==="[object Array]"){f=i.length;for(c=0;c<f;c+=1)h[c]=str(c,i)||"null";return e=h.length===0?"[]":gap?"[\n"+gap+h.join(",\n"+gap)+"\n"+g+"]":"["+h.join(",")+"]",gap=g,e}if(rep&&typeof rep=="object"){f=rep.length;for(c=0;c<f;c+=1)typeof rep[c]=="string"&&(d=rep[c],e=str(d,i),e&&h.push(quote(d)+(gap?": ":":")+e))}else for(d in i)Object.prototype.hasOwnProperty.call(i,d)&&(e=str(d,i),e&&h.push(quote(d)+(gap?": ":":")+e));return e=h.length===0?"{}":gap?"{\n"+gap+h.join(",\n"+gap)+"\n"+g+"}":"{"+h.join(",")+"}",gap=g,e}}"use strict";if(nativeJSON&&nativeJSON.parse)return exports.JSON={parse:nativeJSON.parse,stringify:nativeJSON.stringify};var JSON=exports.JSON={},cx=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,escapable=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,gap,indent,meta={"\b":"\\b","\t":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"},rep;JSON.stringify=function(a,b,c){var d;gap="",indent="";if(typeof c=="number")for(d=0;d<c;d+=1)indent+=" ";else typeof c=="string"&&(indent=c);rep=b;if(!b||typeof b=="function"||typeof b=="object"&&typeof b.length=="number")return str("",{"":a});throw new Error("JSON.stringify")},JSON.parse=function(text,reviver){function walk(a,b){var c,d,e=a[b];if(e&&typeof e=="object")for(c in e)Object.prototype.hasOwnProperty.call(e,c)&&(d=walk(e,c),d!==undefined?e[c]=d:delete e[c]);return reviver.call(a,b,e)}var j;text=String(text),cx.lastIndex=0,cx.test(text)&&(text=text.replace(cx,function(a){return"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)}));if(/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,"@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,"]").replace(/(?:^|:|,)(?:\s*\[)+/g,"")))return j=eval("("+text+")"),typeof reviver=="function"?walk({"":j},""):j;throw new SyntaxError("JSON.parse")}}("undefined"!=typeof io?io:module.exports,typeof JSON!="undefined"?JSON:undefined),function(a,b){var c=a.parser={},d=c.packets=["disconnect","connect","heartbeat","message","json","event","ack","error","noop"],e=c.reasons=["transport not supported","client not handshaken","unauthorized"],f=c.advice=["reconnect"],g=b.JSON,h=b.util.indexOf;c.encodePacket=function(a){var b=h(d,a.type),c=a.id||"",i=a.endpoint||"",j=a.ack,k=null;switch(a.type){case"error":var l=a.reason?h(e,a.reason):"",m=a.advice?h(f,a.advice):"";if(l!==""||m!=="")k=l+(m!==""?"+"+m:"");break;case"message":a.data!==""&&(k=a.data);break;case"event":var n={name:a.name};a.args&&a.args.length&&(n.args=a.args),k=g.stringify(n);break;case"json":k=g.stringify(a.data);break;case"connect":a.qs&&(k=a.qs);break;case"ack":k=a.ackId+(a.args&&a.args.length?"+"+g.stringify(a.args):"")}var o=[b,c+(j=="data"?"+":""),i];return k!==null&&k!==undefined&&o.push(k),o.join(":")},c.encodePayload=function(a){var b="";if(a.length==1)return a[0];for(var c=0,d=a.length;c<d;c++){var e=a[c];b+="\ufffd"+e.length+"\ufffd"+a[c]}return b};var i=/([^:]+):([0-9]+)?(\+)?:([^:]+)?:?([\s\S]*)?/;c.decodePacket=function(a){var b=a.match(i);if(!b)return{};var c=b[2]||"",a=b[5]||"",h={type:d[b[1]],endpoint:b[4]||""};c&&(h.id=c,b[3]?h.ack="data":h.ack=!0);switch(h.type){case"error":var b=a.split("+");h.reason=e[b[0]]||"",h.advice=f[b[1]]||"";break;case"message":h.data=a||"";break;case"event":try{var j=g.parse(a);h.name=j.name,h.args=j.args}catch(k){}h.args=h.args||[];break;case"json":try{h.data=g.parse(a)}catch(k){}break;case"connect":h.qs=a||"";break;case"ack":var b=a.match(/^([0-9]+)(\+)?(.*)/);if(b){h.ackId=b[1],h.args=[];if(b[3])try{h.args=b[3]?g.parse(b[3]):[]}catch(k){}}break;case"disconnect":case"heartbeat":}return h},c.decodePayload=function(a){if(a.charAt(0)=="\ufffd"){var b=[];for(var d=1,e="";d<a.length;d++)a.charAt(d)=="\ufffd"?(b.push(c.decodePacket(a.substr(d+1).substr(0,e))),d+=Number(e)+1,e=""):e+=a.charAt(d);return b}return[c.decodePacket(a)]}}("undefined"!=typeof io?io:module.exports,"undefined"!=typeof io?io:module.parent.exports),function(a,b){function c(a,b){this.socket=a,this.sessid=b}a.Transport=c,b.util.mixin(c,b.EventEmitter),c.prototype.heartbeats=function(){return!0},c.prototype.onData=function(a){this.clearCloseTimeout(),(this.socket.connected||this.socket.connecting||this.socket.reconnecting)&&this.setCloseTimeout();if(a!==""){var c=b.parser.decodePayload(a);if(c&&c.length)for(var d=0,e=c.length;d<e;d++)this.onPacket(c[d])}return this},c.prototype.onPacket=function(a){return this.socket.setHeartbeatTimeout(),a.type=="heartbeat"?this.onHeartbeat():(a.type=="connect"&&a.endpoint==""&&this.onConnect(),a.type=="error"&&a.advice=="reconnect"&&(this.isOpen=!1),this.socket.onPacket(a),this)},c.prototype.setCloseTimeout=function(){if(!this.closeTimeout){var a=this;this.closeTimeout=setTimeout(function(){a.onDisconnect()},this.socket.closeTimeout)}},c.prototype.onDisconnect=function(){return this.isOpen&&this.close(),this.clearTimeouts(),this.socket.onDisconnect(),this},c.prototype.onConnect=function(){return this.socket.onConnect(),this},c.prototype.clearCloseTimeout=function(){this.closeTimeout&&(clearTimeout(this.closeTimeout),this.closeTimeout=null)},c.prototype.clearTimeouts=function(){this.clearCloseTimeout(),this.reopenTimeout&&clearTimeout(this.reopenTimeout)},c.prototype.packet=function(a){this.send(b.parser.encodePacket(a))},c.prototype.onHeartbeat=function(a){this.packet({type:"heartbeat"})},c.prototype.onOpen=function(){this.isOpen=!0,this.clearCloseTimeout(),this.socket.onOpen()},c.prototype.onClose=function(){var a=this;this.isOpen=!1,this.socket.onClose(),this.onDisconnect()},c.prototype.prepareUrl=function(){var a=this.socket.options;return this.scheme()+"://"+a.host+":"+a.port+"/"+a.resource+"/"+b.protocol+"/"+this.name+"/"+this.sessid},c.prototype.ready=function(a,b){b.call(this)}}("undefined"!=typeof io?io:module.exports,"undefined"!=typeof io?io:module.parent.exports),function(a,b,c){function d(a){this.options={port:80,secure:!1,document:"document"in c?document:!1,resource:"socket.io",transports:b.transports,"connect timeout":1e4,"try multiple transports":!0,reconnect:!0,"reconnection delay":500,"reconnection limit":Infinity,"reopen delay":3e3,"max reconnection attempts":10,"sync disconnect on unload":!1,"auto connect":!0,"flash policy port":10843,manualFlush:!1},b.util.merge(this.options,a),this.connected=!1,this.open=!1,this.connecting=!1,this.reconnecting=!1,this.namespaces={},this.buffer=[],this.doBuffer=!1;if(this.options["sync disconnect on unload"]&&(!this.isXDomain()||b.util.ua.hasCORS)){var d=this;b.util.on(c,"beforeunload",function(){d.disconnectSync()},!1)}this.options["auto connect"]&&this.connect()}function e(){}a.Socket=d,b.util.mixin(d,b.EventEmitter),d.prototype.of=function(a){return this.namespaces[a]||(this.namespaces[a]=new b.SocketNamespace(this,a),a!==""&&this.namespaces[a].packet({type:"connect"})),this.namespaces[a]},d.prototype.publish=function(){this.emit.apply(this,arguments);var a;for(var b in this.namespaces)this.namespaces.hasOwnProperty(b)&&(a=this.of(b),a.$emit.apply(a,arguments))},d.prototype.handshake=function(a){function f(b){b instanceof Error?(c.connecting=!1,c.onError(b.message)):a.apply(null,b.split(":"))}var c=this,d=this.options,g=["http"+(d.secure?"s":"")+":/",d.host+":"+d.port,d.resource,b.protocol,b.util.query(this.options.query,"t="+ +(new Date))].join("/");if(this.isXDomain()&&!b.util.ua.hasCORS){var h=document.getElementsByTagName("script")[0],i=document.createElement("script");i.src=g+"&jsonp="+b.j.length,h.parentNode.insertBefore(i,h),b.j.push(function(a){f(a),i.parentNode.removeChild(i)})}else{var j=b.util.request();j.open("GET",g,!0),this.isXDomain()&&(j.withCredentials=!0),j.onreadystatechange=function(){j.readyState==4&&(j.onreadystatechange=e,j.status==200?f(j.responseText):j.status==403?c.onError(j.responseText):(c.connecting=!1,!c.reconnecting&&c.onError(j.responseText)))},j.send(null)}},d.prototype.getTransport=function(a){var c=a||this.transports,d;for(var e=0,f;f=c[e];e++)if(b.Transport[f]&&b.Transport[f].check(this)&&(!this.isXDomain()||b.Transport[f].xdomainCheck(this)))return new b.Transport[f](this,this.sessionid);return null},d.prototype.connect=function(a){if(this.connecting)return this;var c=this;return c.connecting=!0,this.handshake(function(d,e,f,g){function h(a){c.transport&&c.transport.clearTimeouts(),c.transport=c.getTransport(a);if(!c.transport)return c.publish("connect_failed");c.transport.ready(c,function(){c.connecting=!0,c.publish("connecting",c.transport.name),c.transport.open(),c.options["connect timeout"]&&(c.connectTimeoutTimer=setTimeout(function(){if(!c.connected){c.connecting=!1;if(c.options["try multiple transports"]){var a=c.transports;while(a.length>0&&a.splice(0,1)[0]!=c.transport.name);a.length?h(a):c.publish("connect_failed")}}},c.options["connect timeout"]))})}c.sessionid=d,c.closeTimeout=f*1e3,c.heartbeatTimeout=e*1e3,c.transports||(c.transports=c.origTransports=g?b.util.intersect(g.split(","),c.options.transports):c.options.transports),c.setHeartbeatTimeout(),h(c.transports),c.once("connect",function(){clearTimeout(c.connectTimeoutTimer),a&&typeof a=="function"&&a()})}),this},d.prototype.setHeartbeatTimeout=function(){clearTimeout(this.heartbeatTimeoutTimer);if(this.transport&&!this.transport.heartbeats())return;var a=this;this.heartbeatTimeoutTimer=setTimeout(function(){a.transport.onClose()},this.heartbeatTimeout)},d.prototype.packet=function(a){return this.connected&&!this.doBuffer?this.transport.packet(a):this.buffer.push(a),this},d.prototype.setBuffer=function(a){this.doBuffer=a,!a&&this.connected&&this.buffer.length&&(this.options.manualFlush||this.flushBuffer())},d.prototype.flushBuffer=function(){this.transport.payload(this.buffer),this.buffer=[]},d.prototype.disconnect=function(){if(this.connected||this.connecting)this.open&&this.of("").packet({type:"disconnect"}),this.onDisconnect("booted");return this},d.prototype.disconnectSync=function(){var a=b.util.request(),c=["http"+(this.options.secure?"s":"")+":/",this.options.host+":"+this.options.port,this.options.resource,b.protocol,"",this.sessionid].join("/")+"/?disconnect=1";a.open("GET",c,!1),a.send(null),this.onDisconnect("booted")},d.prototype.isXDomain=function(){var a=c.location.port||("https:"==c.location.protocol?443:80);return this.options.host!==c.location.hostname||this.options.port!=a},d.prototype.onConnect=function(){this.connected||(this.connected=!0,this.connecting=!1,this.doBuffer||this.setBuffer(!1),this.emit("connect"))},d.prototype.onOpen=function(){this.open=!0},d.prototype.onClose=function(){this.open=!1,clearTimeout(this.heartbeatTimeoutTimer)},d.prototype.onPacket=function(a){this.of(a.endpoint).onPacket(a)},d.prototype.onError=function(a){a&&a.advice&&a.advice==="reconnect"&&(this.connected||this.connecting)&&(this.disconnect(),this.options.reconnect&&this.reconnect()),this.publish("error",a&&a.reason?a.reason:a)},d.prototype.onDisconnect=function(a){var b=this.connected,c=this.connecting;this.connected=!1,this.connecting=!1,this.open=!1;if(b||c)this.transport.close(),this.transport.clearTimeouts(),b&&(this.publish("disconnect",a),"booted"!=a&&this.options.reconnect&&!this.reconnecting&&this.reconnect())},d.prototype.reconnect=function(){function e(){if(a.connected){for(var b in a.namespaces)a.namespaces.hasOwnProperty(b)&&""!==b&&a.namespaces[b].packet({type:"connect"});a.publish("reconnect",a.transport.name,a.reconnectionAttempts)}clearTimeout(a.reconnectionTimer),a.removeListener("connect_failed",f),a.removeListener("connect",f),a.reconnecting=!1,delete a.reconnectionAttempts,delete a.reconnectionDelay,delete a.reconnectionTimer,delete a.redoTransports,a.options["try multiple transports"]=c}function f(){if(!a.reconnecting)return;if(a.connected)return e();if(a.connecting&&a.reconnecting)return a.reconnectionTimer=setTimeout(f,1e3);a.reconnectionAttempts++>=b?a.redoTransports?(a.publish("reconnect_failed"),e()):(a.on("connect_failed",f),a.options["try multiple transports"]=!0,a.transports=a.origTransports,a.transport=a.getTransport(),a.redoTransports=!0,a.connect()):(a.reconnectionDelay<d&&(a.reconnectionDelay*=2),a.connect(),a.publish("reconnecting",a.reconnectionDelay,a.reconnectionAttempts),a.reconnectionTimer=setTimeout(f,a.reconnectionDelay))}this.reconnecting=!0,this.reconnectionAttempts=0,this.reconnectionDelay=this.options["reconnection delay"];var a=this,b=this.options["max reconnection attempts"],c=this.options["try multiple transports"],d=this.options["reconnection limit"];this.options["try multiple transports"]=!1,this.reconnectionTimer=setTimeout(f,this.reconnectionDelay),this.on("connect",f)}}("undefined"!=typeof io?io:module.exports,"undefined"!=typeof io?io:module.parent.exports,this),function(a,b){function c(a,b){this.socket=a,this.name=b||"",this.flags={},this.json=new d(this,"json"),this.ackPackets=0,this.acks={}}function d(a,b){this.namespace=a,this.name=b}a.SocketNamespace=c,b.util.mixin(c,b.EventEmitter),c.prototype.$emit=b.EventEmitter.prototype.emit,c.prototype.of=function(){return this.socket.of.apply(this.socket,arguments)},c.prototype.packet=function(a){return a.endpoint=this.name,this.socket.packet(a),this.flags={},this},c.prototype.send=function(a,b){var c={type:this.flags.json?"json":"message",data:a};return"function"==typeof b&&(c.id=++this.ackPackets,c.ack=!0,this.acks[c.id]=b),this.packet(c)},c.prototype.emit=function(a){var b=Array.prototype.slice.call(arguments,1),c=b[b.length-1],d={type:"event",name:a};return"function"==typeof c&&(d.id=++this.ackPackets,d.ack="data",this.acks[d.id]=c,b=b.slice(0,b.length-1)),d.args=b,this.packet(d)},c.prototype.disconnect=function(){return this.name===""?this.socket.disconnect():(this.packet({type:"disconnect"}),this.$emit("disconnect")),this},c.prototype.onPacket=function(a){function d(){c.packet({type:"ack",args:b.util.toArray(arguments),ackId:a.id})}var c=this;switch(a.type){case"connect":this.$emit("connect");break;case"disconnect":this.name===""?this.socket.onDisconnect(a.reason||"booted"):this.$emit("disconnect",a.reason);break;case"message":case"json":var e=["message",a.data];a.ack=="data"?e.push(d):a.ack&&this.packet({type:"ack",ackId:a.id}),this.$emit.apply(this,e);break;case"event":var e=[a.name].concat(a.args);a.ack=="data"&&e.push(d),this.$emit.apply(this,e);break;case"ack":this.acks[a.ackId]&&(this.acks[a.ackId].apply(this,a.args),delete this.acks[a.ackId]);break;case"error":a.advice?this.socket.onError(a):a.reason=="unauthorized"?this.$emit("connect_failed",a.reason):this.$emit("error",a.reason)}},d.prototype.send=function(){this.namespace.flags[this.name]=!0,this.namespace.send.apply(this.namespace,arguments)},d.prototype.emit=function(){this.namespace.flags[this.name]=!0,this.namespace.emit.apply(this.namespace,arguments)}}("undefined"!=typeof io?io:module.exports,"undefined"!=typeof io?io:module.parent.exports),function(a,b,c){function d(a){b.Transport.apply(this,arguments)}a.websocket=d,b.util.inherit(d,b.Transport),d.prototype.name="websocket",d.prototype.open=function(){var a=b.util.query(this.socket.options.query),d=this,e;return e||(e=c.MozWebSocket||c.WebSocket),this.websocket=new e(this.prepareUrl()+a),this.websocket.onopen=function(){d.onOpen(),d.socket.setBuffer(!1)},this.websocket.onmessage=function(a){d.onData(a.data)},this.websocket.onclose=function(){d.onClose(),d.socket.setBuffer(!0)},this.websocket.onerror=function(a){d.onError(a)},this},b.util.ua.iDevice?d.prototype.send=function(a){var b=this;return setTimeout(function(){b.websocket.send(a)},0),this}:d.prototype.send=function(a){return this.websocket.send(a),this},d.prototype.payload=function(a){for(var b=0,c=a.length;b<c;b++)this.packet(a[b]);return this},d.prototype.close=function(){return this.websocket.close(),this},d.prototype.onError=function(a){this.socket.onError(a)},d.prototype.scheme=function(){return this.socket.options.secure?"wss":"ws"},d.check=function(){return"WebSocket"in c&&!("__addTask"in WebSocket)||"MozWebSocket"in c},d.xdomainCheck=function(){return!0},b.transports.push("websocket")}("undefined"!=typeof io?io.Transport:module.exports,"undefined"!=typeof io?io:module.parent.exports,this),function(a,b){function c(){b.Transport.websocket.apply(this,arguments)}a.flashsocket=c,b.util.inherit(c,b.Transport.websocket),c.prototype.name="flashsocket",c.prototype.open=function(){var a=this,c=arguments;return WebSocket.__addTask(function(){b.Transport.websocket.prototype.open.apply(a,c)}),this},c.prototype.send=function(){var a=this,c=arguments;return WebSocket.__addTask(function(){b.Transport.websocket.prototype.send.apply(a,c)}),this},c.prototype.close=function(){return WebSocket.__tasks.length=0,b.Transport.websocket.prototype.close.call(this),this},c.prototype.ready=function(a,d){function e(){var b=a.options,e=b["flash policy port"],g=["http"+(b.secure?"s":"")+":/",b.host+":"+b.port,b.resource,"static/flashsocket","WebSocketMain"+(a.isXDomain()?"Insecure":"")+".swf"];c.loaded||(typeof WEB_SOCKET_SWF_LOCATION=="undefined"&&(WEB_SOCKET_SWF_LOCATION=g.join("/")),e!==843&&WebSocket.loadFlashPolicyFile("xmlsocket://"+b.host+":"+e),WebSocket.__initialize(),c.loaded=!0),d.call(f)}var f=this;if(document.body)return e();b.util.load(e)},c.check=function(){return typeof WebSocket!="undefined"&&"__initialize"in WebSocket&&!!swfobject?swfobject.getFlashPlayerVersion().major>=10:!1},c.xdomainCheck=function(){return!0},typeof window!="undefined"&&(WEB_SOCKET_DISABLE_AUTO_INITIALIZATION=!0),b.transports.push("flashsocket")}("undefined"!=typeof io?io.Transport:module.exports,"undefined"!=typeof io?io:module.parent.exports);if("undefined"!=typeof window)var swfobject=function(){function A(){if(t)return;try{var a=i.getElementsByTagName("body")[0].appendChild(Q("span"));a.parentNode.removeChild(a)}catch(b){return}t=!0;var c=l.length;for(var d=0;d<c;d++)l[d]()}function B(a){t?a():l[l.length]=a}function C(b){if(typeof h.addEventListener!=a)h.addEventListener("load",b,!1);else if(typeof i.addEventListener!=a)i.addEventListener("load",b,!1);else if(typeof h.attachEvent!=a)R(h,"onload",b);else if(typeof h.onload=="function"){var c=h.onload;h.onload=function(){c(),b()}}else h.onload=b}function D(){k?E():F()}function E(){var c=i.getElementsByTagName("body")[0],d=Q(b);d.setAttribute("type",e);var f=c.appendChild(d);if(f){var g=0;(function(){if(typeof f.GetVariable!=a){var b=f.GetVariable("$version");b&&(b=b.split(" ")[1].split(","),y.pv=[parseInt(b[0],10),parseInt(b[1],10),parseInt(b[2],10)])}else if(g<10){g++,setTimeout(arguments.callee,10);return}c.removeChild(d),f=null,F()})()}else F()}function F(){var b=m.length;if(b>0)for(var c=0;c<b;c++){var d=m[c].id,e=m[c].callbackFn,f={success:!1,id:d};if(y.pv[0]>0){var g=P(d);if(g)if(S(m[c].swfVersion)&&!(y.wk&&y.wk<312))U(d,!0),e&&(f.success=!0,f.ref=G(d),e(f));else if(m[c].expressInstall&&H()){var h={};h.data=m[c].expressInstall,h.width=g.getAttribute("width")||"0",h.height=g.getAttribute("height")||"0",g.getAttribute("class")&&(h.styleclass=g.getAttribute("class")),g.getAttribute("align")&&(h.align=g.getAttribute("align"));var i={},j=g.getElementsByTagName("param"),k=j.length;for(var l=0;l<k;l++)j[l].getAttribute("name").toLowerCase()!="movie"&&(i[j[l].getAttribute("name")]=j[l].getAttribute("value"));I(h,i,d,e)}else J(g),e&&e(f)}else{U(d,!0);if(e){var n=G(d);n&&typeof n.SetVariable!=a&&(f.success=!0,f.ref=n),e(f)}}}}function G(c){var d=null,e=P(c);if(e&&e.nodeName=="OBJECT")if(typeof e.SetVariable!=a)d=e;else{var f=e.getElementsByTagName(b)[0];f&&(d=f)}return d}function H(){return!u&&S("6.0.65")&&(y.win||y.mac)&&!(y.wk&&y.wk<312)}function I(b,c,d,e){u=!0,r=e||null,s={success:!1,id:d};var g=P(d);if(g){g.nodeName=="OBJECT"?(p=K(g),q=null):(p=g,q=d),b.id=f;if(typeof b.width==a||!/%$/.test(b.width)&&parseInt(b.width,10)<310)b.width="310";if(typeof b.height==a||!/%$/.test(b.height)&&parseInt(b.height,10)<137)b.height="137";i.title=i.title.slice(0,47)+" - Flash Player Installation";var j=y.ie&&y.win?["Active"].concat("").join("X"):"PlugIn",k="MMredirectURL="+h.location.toString().replace(/&/g,"%26")+"&MMplayerType="+j+"&MMdoctitle="+i.title;typeof c.flashvars!=a?c.flashvars+="&"+k:c.flashvars=k;if(y.ie&&y.win&&g.readyState!=4){var l=Q("div");d+="SWFObjectNew",l.setAttribute("id",d),g.parentNode.insertBefore(l,g),g.style.display="none",function(){g.readyState==4?g.parentNode.removeChild(g):setTimeout(arguments.callee,10)}()}L(b,c,d)}}function J(a){if(y.ie&&y.win&&a.readyState!=4){var b=Q("div");a.parentNode.insertBefore(b,a),b.parentNode.replaceChild(K(a),b),a.style.display="none",function(){a.readyState==4?a.parentNode.removeChild(a):setTimeout(arguments.callee,10)}()}else a.parentNode.replaceChild(K(a),a)}function K(a){var c=Q("div");if(y.win&&y.ie)c.innerHTML=a.innerHTML;else{var d=a.getElementsByTagName(b)[0];if(d){var e=d.childNodes;if(e){var f=e.length;for(var g=0;g<f;g++)(e[g].nodeType!=1||e[g].nodeName!="PARAM")&&e[g].nodeType!=8&&c.appendChild(e[g].cloneNode(!0))}}}return c}function L(c,d,f){var g,h=P(f);if(y.wk&&y.wk<312)return g;if(h){typeof c.id==a&&(c.id=f);if(y.ie&&y.win){var i="";for(var j in c)c[j]!=Object.prototype[j]&&(j.toLowerCase()=="data"?d.movie=c[j]:j.toLowerCase()=="styleclass"?i+=' class="'+c[j]+'"':j.toLowerCase()!="classid"&&(i+=" "+j+'="'+c[j]+'"'));var k="";for(var l in d)d[l]!=Object.prototype[l]&&(k+='<param name="'+l+'" value="'+d[l]+'" />');h.outerHTML='<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"'+i+">"+k+"</object>",n[n.length]=c.id,g=P(c.id)}else{var m=Q(b);m.setAttribute("type",e);for(var o in c)c[o]!=Object.prototype[o]&&(o.toLowerCase()=="styleclass"?m.setAttribute("class",c[o]):o.toLowerCase()!="classid"&&m.setAttribute(o,c[o]));for(var p in d)d[p]!=Object.prototype[p]&&p.toLowerCase()!="movie"&&M(m,p,d[p]);h.parentNode.replaceChild(m,h),g=m}}return g}function M(a,b,c){var d=Q("param");d.setAttribute("name",b),d.setAttribute("value",c),a.appendChild(d)}function N(a){var b=P(a);b&&b.nodeName=="OBJECT"&&(y.ie&&y.win?(b.style.display="none",function(){b.readyState==4?O(a):setTimeout(arguments.callee,10)}()):b.parentNode.removeChild(b))}function O(a){var b=P(a);if(b){for(var c in b)typeof b[c]=="function"&&(b[c]=null);b.parentNode.removeChild(b)}}function P(a){var b=null;try{b=i.getElementById(a)}catch(c){}return b}function Q(a){return i.createElement(a)}function R(a,b,c){a.attachEvent(b,c),o[o.length]=[a,b,c]}function S(a){var b=y.pv,c=a.split(".");return c[0]=parseInt(c[0],10),c[1]=parseInt(c[1],10)||0,c[2]=parseInt(c[2],10)||0,b[0]>c[0]||b[0]==c[0]&&b[1]>c[1]||b[0]==c[0]&&b[1]==c[1]&&b[2]>=c[2]?!0:!1}function T(c,d,e,f){if(y.ie&&y.mac)return;var g=i.getElementsByTagName("head")[0];if(!g)return;var h=e&&typeof e=="string"?e:"screen";f&&(v=null,w=null);if(!v||w!=h){var j=Q("style");j.setAttribute("type","text/css"),j.setAttribute("media",h),v=g.appendChild(j),y.ie&&y.win&&typeof i.styleSheets!=a&&i.styleSheets.length>0&&(v=i.styleSheets[i.styleSheets.length-1]),w=h}y.ie&&y.win?v&&typeof v.addRule==b&&v.addRule(c,d):v&&typeof i.createTextNode!=a&&v.appendChild(i.createTextNode(c+" {"+d+"}"))}function U(a,b){if(!x)return;var c=b?"visible":"hidden";t&&P(a)?P(a).style.visibility=c:T("#"+a,"visibility:"+c)}function V(b){var c=/[\\\"<>\.;]/,d=c.exec(b)!=null;return d&&typeof encodeURIComponent!=a?encodeURIComponent(b):b}var a="undefined",b="object",c="Shockwave Flash",d="ShockwaveFlash.ShockwaveFlash",e="application/x-shockwave-flash",f="SWFObjectExprInst",g="onreadystatechange",h=window,i=document,j=navigator,k=!1,l=[D],m=[],n=[],o=[],p,q,r,s,t=!1,u=!1,v,w,x=!0,y=function(){var f=typeof i.getElementById!=a&&typeof i.getElementsByTagName!=a&&typeof i.createElement!=a,g=j.userAgent.toLowerCase(),l=j.platform.toLowerCase(),m=l?/win/.test(l):/win/.test(g),n=l?/mac/.test(l):/mac/.test(g),o=/webkit/.test(g)?parseFloat(g.replace(/^.*webkit\/(\d+(\.\d+)?).*$/,"$1")):!1,p=!1,q=[0,0,0],r=null;if(typeof j.plugins!=a&&typeof j.plugins[c]==b)r=j.plugins[c].description,r&&(typeof j.mimeTypes==a||!j.mimeTypes[e]||!!j.mimeTypes[e].enabledPlugin)&&(k=!0,p=!1,r=r.replace(/^.*\s+(\S+\s+\S+$)/,"$1"),q[0]=parseInt(r.replace(/^(.*)\..*$/,"$1"),10),q[1]=parseInt(r.replace(/^.*\.(.*)\s.*$/,"$1"),10),q[2]=/[a-zA-Z]/.test(r)?parseInt(r.replace(/^.*[a-zA-Z]+(.*)$/,"$1"),10):0);else if(typeof h[["Active"].concat("Object").join("X")]!=a)try{var s=new(window[["Active"].concat("Object").join("X")])(d);s&&(r=s.GetVariable("$version"),r&&(p=!0,r=r.split(" ")[1].split(","),q=[parseInt(r[0],10),parseInt(r[1],10),parseInt(r[2],10)]))}catch(t){}return{w3:f,pv:q,wk:o,ie:p,win:m,mac:n}}(),z=function(){if(!y.w3)return;(typeof i.readyState!=a&&i.readyState=="complete"||typeof i.readyState==a&&(i.getElementsByTagName("body")[0]||i.body))&&A(),t||(typeof i.addEventListener!=a&&i.addEventListener("DOMContentLoaded",A,!1),y.ie&&y.win&&(i.attachEvent(g,function(){i.readyState=="complete"&&(i.detachEvent(g,arguments.callee),A())}),h==top&&function(){if(t)return;try{i.documentElement.doScroll("left")}catch(a){setTimeout(arguments.callee,0);return}A()}()),y.wk&&function(){if(t)return;if(!/loaded|complete/.test(i.readyState)){setTimeout(arguments.callee,0);return}A()}(),C(A))}(),W=function(){y.ie&&y.win&&window.attachEvent("onunload",function(){var a=o.length;for(var b=0;b<a;b++)o[b][0].detachEvent(o[b][1],o[b][2]);var c=n.length;for(var d=0;d<c;d++)N(n[d]);for(var e in y)y[e]=null;y=null;for(var f in swfobject)swfobject[f]=null;swfobject=null})}();return{registerObject:function(a,b,c,d){if(y.w3&&a&&b){var e={};e.id=a,e.swfVersion=b,e.expressInstall=c,e.callbackFn=d,m[m.length]=e,U(a,!1)}else d&&d({success:!1,id:a})},getObjectById:function(a){if(y.w3)return G(a)},embedSWF:function(c,d,e,f,g,h,i,j,k,l){var m={success:!1,id:d};y.w3&&!(y.wk&&y.wk<312)&&c&&d&&e&&f&&g?(U(d,!1),B(function(){e+="",f+="";var n={};if(k&&typeof k===b)for(var o in k)n[o]=k[o];n.data=c,n.width=e,n.height=f;var p={};if(j&&typeof j===b)for(var q in j)p[q]=j[q];if(i&&typeof i===b)for(var r in i)typeof p.flashvars!=a?p.flashvars+="&"+r+"="+i[r]:p.flashvars=r+"="+i[r];if(S(g)){var s=L(n,p,d);n.id==d&&U(d,!0),m.success=!0,m.ref=s}else{if(h&&H()){n.data=h,I(n,p,d,l);return}U(d,!0)}l&&l(m)})):l&&l(m)},switchOffAutoHideShow:function(){x=!1},ua:y,getFlashPlayerVersion:function(){return{major:y.pv[0],minor:y.pv[1],release:y.pv[2]}},hasFlashPlayerVersion:S,createSWF:function(a,b,c){return y.w3?L(a,b,c):undefined},showExpressInstall:function(a,b,c,d){y.w3&&H()&&I(a,b,c,d)},removeSWF:function(a){y.w3&&N(a)},createCSS:function(a,b,c,d){y.w3&&T(a,b,c,d)},addDomLoadEvent:B,addLoadEvent:C,getQueryParamValue:function(a){var b=i.location.search||i.location.hash;if(b){/\?/.test(b)&&(b=b.split("?")[1]);if(a==null)return V(b);var c=b.split("&");for(var d=0;d<c.length;d++)if(c[d].substring(0,c[d].indexOf("="))==a)return V(c[d].substring(c[d].indexOf("=")+1))}return""},expressInstallCallback:function(){if(u){var a=P(f);a&&p&&(a.parentNode.replaceChild(p,a),q&&(U(q,!0),y.ie&&y.win&&(p.style.display="block")),r&&r(s)),u=!1}}}}();(function(){if("undefined"==typeof window||window.WebSocket)return;var a=window.console;if(!a||!a.log||!a.error)a={log:function(){},error:function(){}};if(!swfobject.hasFlashPlayerVersion("10.0.0")){a.error("Flash Player >= 10.0.0 is required.");return}location.protocol=="file:"&&a.error("WARNING: web-socket-js doesn't work in file:///... URL unless you set Flash Security Settings properly. Open the page via Web server i.e. http://..."),WebSocket=function(a,b,c,d,e){var f=this;f.__id=WebSocket.__nextId++,WebSocket.__instances[f.__id]=f,f.readyState=WebSocket.CONNECTING,f.bufferedAmount=0,f.__events={},b?typeof b=="string"&&(b=[b]):b=[],setTimeout(function(){WebSocket.__addTask(function(){WebSocket.__flash.create(f.__id,a,b,c||null,d||0,e||null)})},0)},WebSocket.prototype.send=function(a){if(this.readyState==WebSocket.CONNECTING)throw"INVALID_STATE_ERR: Web Socket connection has not been established";var b=WebSocket.__flash.send(this.__id,encodeURIComponent(a));return b<0?!0:(this.bufferedAmount+=b,!1)},WebSocket.prototype.close=function(){if(this.readyState==WebSocket.CLOSED||this.readyState==WebSocket.CLOSING)return;this.readyState=WebSocket.CLOSING,WebSocket.__flash.close(this.__id)},WebSocket.prototype.addEventListener=function(a,b,c){a in this.__events||(this.__events[a]=[]),this.__events[a].push(b)},WebSocket.prototype.removeEventListener=function(a,b,c){if(!(a in this.__events))return;var d=this.__events[a];for(var e=d.length-1;e>=0;--e)if(d[e]===b){d.splice(e,1);break}},WebSocket.prototype.dispatchEvent=function(a){var b=this.__events[a.type]||[];for(var c=0;c<b.length;++c)b[c](a);var d=this["on"+a.type];d&&d(a)},WebSocket.prototype.__handleEvent=function(a){"readyState"in a&&(this.readyState=a.readyState),"protocol"in a&&(this.protocol=a.protocol);var b;if(a.type=="open"||a.type=="error")b=this.__createSimpleEvent(a.type);else if(a.type=="close")b=this.__createSimpleEvent("close");else{if(a.type!="message")throw"unknown event type: "+a.type;var c=decodeURIComponent(a.message);b=this.__createMessageEvent("message",c)}this.dispatchEvent(b)},WebSocket.prototype.__createSimpleEvent=function(a){if(document.createEvent&&window.Event){var b=document.createEvent("Event");return b.initEvent(a,!1,!1),b}return{type:a,bubbles:!1,cancelable:!1}},WebSocket.prototype.__createMessageEvent=function(a,b){if(document.createEvent&&window.MessageEvent&&!window.opera){var c=document.createEvent("MessageEvent");return c.initMessageEvent("message",!1,!1,b,null,null,window,null),c}return{type:a,data:b,bubbles:!1,cancelable:!1}},WebSocket.CONNECTING=0,WebSocket.OPEN=1,WebSocket.CLOSING=2,WebSocket.CLOSED=3,WebSocket.__flash=null,WebSocket.__instances={},WebSocket.__tasks=[],WebSocket.__nextId=0,WebSocket.loadFlashPolicyFile=function(a){WebSocket.__addTask(function(){WebSocket.__flash.loadManualPolicyFile(a)})},WebSocket.__initialize=function(){if(WebSocket.__flash)return;WebSocket.__swfLocation&&(window.WEB_SOCKET_SWF_LOCATION=WebSocket.__swfLocation);if(!window.WEB_SOCKET_SWF_LOCATION){a.error("[WebSocket] set WEB_SOCKET_SWF_LOCATION to location of WebSocketMain.swf");return}var b=document.createElement("div");b.id="webSocketContainer",b.style.position="absolute",WebSocket.__isFlashLite()?(b.style.left="0px",b.style.top="0px"):(b.style.left="-100px",b.style.top="-100px");var c=document.createElement("div");c.id="webSocketFlash",b.appendChild(c),document.body.appendChild(b),swfobject.embedSWF(WEB_SOCKET_SWF_LOCATION,"webSocketFlash","1","1","10.0.0",null,null,{hasPriority:!0,swliveconnect:!0,allowScriptAccess:"always"},null,function(b){b.success||a.error("[WebSocket] swfobject.embedSWF failed")})},WebSocket.__onFlashInitialized=function(){setTimeout(function(){WebSocket.__flash=document.getElementById("webSocketFlash"),WebSocket.__flash.setCallerUrl(location.href),WebSocket.__flash.setDebug(!!window.WEB_SOCKET_DEBUG);for(var a=0;a<WebSocket.__tasks.length;++a)WebSocket.__tasks[a]();WebSocket.__tasks=[]},0)},WebSocket.__onFlashEvent=function(){return setTimeout(function(){try{var b=WebSocket.__flash.receiveEvents();for(var c=0;c<b.length;++c)WebSocket.__instances[b[c].webSocketId].__handleEvent(b[c])}catch(d){a.error(d)}},0),!0},WebSocket.__log=function(b){a.log(decodeURIComponent(b))},WebSocket.__error=function(b){a.error(decodeURIComponent(b))},WebSocket.__addTask=function(a){WebSocket.__flash?a():WebSocket.__tasks.push(a)},WebSocket.__isFlashLite=function(){if(!window.navigator||!window.navigator.mimeTypes)return!1;var a=window.navigator.mimeTypes["application/x-shockwave-flash"];return!a||!a.enabledPlugin||!a.enabledPlugin.filename?!1:a.enabledPlugin.filename.match(/flashlite/i)?!0:!1},window.WEB_SOCKET_DISABLE_AUTO_INITIALIZATION||(window.addEventListener?window.addEventListener("load",function(){WebSocket.__initialize()},!1):window.attachEvent("onload",function(){WebSocket.__initialize()}))})(),function(a,b,c){function d(a){if(!a)return;b.Transport.apply(this,arguments),this.sendBuffer=[]}function e(){}a.XHR=d,b.util.inherit(d,b.Transport),d.prototype.open=function(){return this.socket.setBuffer(!1),this.onOpen(),this.get(),this.setCloseTimeout(),this},d.prototype.payload=function(a){var c=[];for(var d=0,e=a.length;d<e;d++)c.push(b.parser.encodePacket(a[d]));this.send(b.parser.encodePayload(c))},d.prototype.send=function(a){return this.post(a),this},d.prototype.post=function(a){function d(){this.readyState==4&&(this.onreadystatechange=e,b.posting=!1,this.status==200?b.socket.setBuffer(!1):b.onClose())}function f(){this.onload=e,b.socket.setBuffer(!1)}var b=this;this.socket.setBuffer(!0),this.sendXHR=this.request("POST"),c.XDomainRequest&&this.sendXHR instanceof XDomainRequest?this.sendXHR.onload=this.sendXHR.onerror=f:this.sendXHR.onreadystatechange=d,this.sendXHR.send(a)},d.prototype.close=function(){return this.onClose(),this},d.prototype.request=function(a){var c=b.util.request(this.socket.isXDomain()),d=b.util.query(this.socket.options.query,"t="+ +(new Date));c.open(a||"GET",this.prepareUrl()+d,!0);if(a=="POST")try{c.setRequestHeader?c.setRequestHeader("Content-type","text/plain;charset=UTF-8"):c.contentType="text/plain"}catch(e){}return c},d.prototype.scheme=function(){return this.socket.options.secure?"https":"http"},d.check=function(a,d){try{var e=b.util.request(d),f=c.XDomainRequest&&e instanceof XDomainRequest,g=a&&a.options&&a.options.secure?"https:":"http:",h=c.location&&g!=c.location.protocol;if(e&&(!f||!h))return!0}catch(i){}return!1},d.xdomainCheck=function(a){return d.check(a,!0)}}("undefined"!=typeof io?io.Transport:module.exports,"undefined"!=typeof io?io:module.parent.exports,this),function(a,b){function c(a){b.Transport.XHR.apply(this,arguments)}a.htmlfile=c,b.util.inherit(c,b.Transport.XHR),c.prototype.name="htmlfile",c.prototype.get=function(){this.doc=new(window[["Active"].concat("Object").join("X")])("htmlfile"),this.doc.open(),this.doc.write("<html></html>"),this.doc.close(),this.doc.parentWindow.s=this;var a=this.doc.createElement("div");a.className="socketio",this.doc.body.appendChild(a),this.iframe=this.doc.createElement("iframe"),a.appendChild(this.iframe);var c=this,d=b.util.query(this.socket.options.query,"t="+ +(new Date));this.iframe.src=this.prepareUrl()+d,b.util.on(window,"unload",function(){c.destroy()})},c.prototype._=function(a,b){a=a.replace(/\\\//g,"/"),this.onData(a);try{var c=b.getElementsByTagName("script")[0];c.parentNode.removeChild(c)}catch(d){}},c.prototype.destroy=function(){if(this.iframe){try{this.iframe.src="about:blank"}catch(a){}this.doc=null,this.iframe.parentNode.removeChild(this.iframe),this.iframe=null,CollectGarbage()}},c.prototype.close=function(){return this.destroy(),b.Transport.XHR.prototype.close.call(this)},c.check=function(a){if(typeof window!="undefined"&&["Active"].concat("Object").join("X")in window)try{var c=new(window[["Active"].concat("Object").join("X")])("htmlfile");return c&&b.Transport.XHR.check(a)}catch(d){}return!1},c.xdomainCheck=function(){return!1},b.transports.push("htmlfile")}("undefined"!=typeof io?io.Transport:module.exports,"undefined"!=typeof io?io:module.parent.exports),function(a,b,c){function d(){b.Transport.XHR.apply(this,arguments)}function e(){}a["xhr-polling"]=d,b.util.inherit(d,b.Transport.XHR),b.util.merge(d,b.Transport.XHR),d.prototype.name="xhr-polling",d.prototype.heartbeats=function(){return!1},d.prototype.open=function(){var a=this;return b.Transport.XHR.prototype.open.call(a),!1},d.prototype.get=function(){function b(){this.readyState==4&&(this.onreadystatechange=e,this.status==200?(a.onData(this.responseText),a.get()):a.onClose())}function d(){this.onload=e,this.onerror=e,a.retryCounter=1,a.onData(this.responseText),a.get()}function f(){a.retryCounter++,!a.retryCounter||a.retryCounter>3?a.onClose():a.get()}if(!this.isOpen)return;var a=this;this.xhr=this.request(),c.XDomainRequest&&this.xhr instanceof XDomainRequest?(this.xhr.onload=d,this.xhr.onerror=f):this.xhr.onreadystatechange=b,this.xhr.send(null)},d.prototype.onClose=function(){b.Transport.XHR.prototype.onClose.call(this);if(this.xhr){this.xhr.onreadystatechange=this.xhr.onload=this.xhr.onerror=e;try{this.xhr.abort()}catch(a){}this.xhr=null}},d.prototype.ready=function(a,c){var d=this;b.util.defer(function(){c.call(d)})},b.transports.push("xhr-polling")}("undefined"!=typeof io?io.Transport:module.exports,"undefined"!=typeof io?io:module.parent.exports,this),function(a,b,c){function e(a){b.Transport["xhr-polling"].apply(this,arguments),this.index=b.j.length;var c=this;b.j.push(function(a){c._(a)})}var d=c.document&&"MozAppearance"in c.document.documentElement.style;a["jsonp-polling"]=e,b.util.inherit(e,b.Transport["xhr-polling"]),e.prototype.name="jsonp-polling",e.prototype.post=function(a){function i(){j(),c.socket.setBuffer(!1)}function j(){c.iframe&&c.form.removeChild(c.iframe);try{h=document.createElement('<iframe name="'+c.iframeId+'">')}catch(a){h=document.createElement("iframe"),h.name=c.iframeId}h.id=c.iframeId,c.form.appendChild(h),c.iframe=h}var c=this,d=b.util.query(this.socket.options.query,"t="+ +(new Date)+"&i="+this.index);if(!this.form){var e=document.createElement("form"),f=document.createElement("textarea"),g=this.iframeId="socketio_iframe_"+this.index,h;e.className="socketio",e.style.position="absolute",e.style.top="0px",e.style.left="0px",e.style.display="none",e.target=g,e.method="POST",e.setAttribute("accept-charset","utf-8"),f.name="d",e.appendChild(f),document.body.appendChild(e),this.form=e,this.area=f}this.form.action=this.prepareUrl()+d,j(),this.area.value=b.JSON.stringify(a);try{this.form.submit()}catch(k){}this.iframe.attachEvent?h.onreadystatechange=function(){c.iframe.readyState=="complete"&&i()}:this.iframe.onload=i,this.socket.setBuffer(!0)},e.prototype.get=function(){var a=this,c=document.createElement("script"),e=b.util.query(this.socket.options.query,"t="+ +(new Date)+"&i="+this.index);this.script&&(this.script.parentNode.removeChild(this.script),this.script=null),c.async=!0,c.src=this.prepareUrl()+e,c.onerror=function(){a.onClose()};var f=document.getElementsByTagName("script")[0];f.parentNode.insertBefore(c,f),this.script=c,d&&setTimeout(function(){var a=document.createElement("iframe");document.body.appendChild(a),document.body.removeChild(a)},100)},e.prototype._=function(a){return this.onData(a),this.isOpen&&this.get(),this},e.prototype.ready=function(a,c){var e=this;if(!d)return c.call(this);b.util.load(function(){c.call(e)})},e.check=function(){return"document"in c},e.xdomainCheck=function(){return!0},b.transports.push("jsonp-polling")}("undefined"!=typeof io?io.Transport:module.exports,"undefined"!=typeof io?io:module.parent.exports,this),typeof define=="function"&&define.amd&&define([],function(){return io})})();
+/* eslint-disable */
+
+/**
+ * To use sails.io.js in an AMD environment (e.g. with require.js),
+ * replace this file with the sails.io.js file from the root of:
+ * https://github.com/balderdashy/sails.io.js
+ * and download a standalone copy of socket.io-client from:
+ * https://github.com/socketio/socket.io-client
+ * then follow the instructions at:
+ * https://github.com/balderdashy/sails.io.js#requirejsamd-usage
+ */
+
+// socket.io-client version 2.0.3
+// https://github.com/socketio/socket.io-client
+
+!function(a,b){"object"==typeof exports&&"object"==typeof module?module.exports=b():"function"==typeof define&&define.amd?define([],b):"object"==typeof exports?exports.io=b():a.io=b()}(this,function(){return function(a){function b(d){if(c[d])return c[d].exports;var e=c[d]={exports:{},id:d,loaded:!1};return a[d].call(e.exports,e,e.exports,b),e.loaded=!0,e.exports}var c={};return b.m=a,b.c=c,b.p="",b(0)}([function(a,b,c){"use strict";function d(a,b){"object"===("undefined"==typeof a?"undefined":e(a))&&(b=a,a=void 0),b=b||{};var c,d=f(a),g=d.source,k=d.id,l=d.path,m=j[k]&&l in j[k].nsps,n=b.forceNew||b["force new connection"]||!1===b.multiplex||m;return n?(i("ignoring socket cache for %s",g),c=h(g,b)):(j[k]||(i("new io instance for %s",g),j[k]=h(g,b)),c=j[k]),d.query&&!b.query&&(b.query=d.query),c.socket(d.path,b)}var e="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(a){return typeof a}:function(a){return a&&"function"==typeof Symbol&&a.constructor===Symbol&&a!==Symbol.prototype?"symbol":typeof a},f=c(1),g=c(7),h=c(13),i=c(3)("socket.io-client");a.exports=b=d;var j=b.managers={};b.protocol=g.protocol,b.connect=d,b.Manager=c(13),b.Socket=c(39)},function(a,b,c){(function(b){"use strict";function d(a,c){var d=a;c=c||b.location,null==a&&(a=c.protocol+"//"+c.host),"string"==typeof a&&("/"===a.charAt(0)&&(a="/"===a.charAt(1)?c.protocol+a:c.host+a),/^(https?|wss?):\/\//.test(a)||(f("protocol-less url %s",a),a="undefined"!=typeof c?c.protocol+"//"+a:"https://"+a),f("parse %s",a),d=e(a)),d.port||(/^(http|ws)$/.test(d.protocol)?d.port="80":/^(http|ws)s$/.test(d.protocol)&&(d.port="443")),d.path=d.path||"/";var g=d.host.indexOf(":")!==-1,h=g?"["+d.host+"]":d.host;return d.id=d.protocol+"://"+h+":"+d.port,d.href=d.protocol+"://"+h+(c&&c.port===d.port?"":":"+d.port),d}var e=c(2),f=c(3)("socket.io-client:url");a.exports=d}).call(b,function(){return this}())},function(a,b){var c=/^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/,d=["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"];a.exports=function(a){var b=a,e=a.indexOf("["),f=a.indexOf("]");e!=-1&&f!=-1&&(a=a.substring(0,e)+a.substring(e,f).replace(/:/g,";")+a.substring(f,a.length));for(var g=c.exec(a||""),h={},i=14;i--;)h[d[i]]=g[i]||"";return e!=-1&&f!=-1&&(h.source=b,h.host=h.host.substring(1,h.host.length-1).replace(/;/g,":"),h.authority=h.authority.replace("[","").replace("]","").replace(/;/g,":"),h.ipv6uri=!0),h}},function(a,b,c){(function(d){function e(){return!("undefined"==typeof window||!window.process||"renderer"!==window.process.type)||"undefined"!=typeof document&&document.documentElement&&document.documentElement.style&&document.documentElement.style.WebkitAppearance||"undefined"!=typeof window&&window.console&&(window.console.firebug||window.console.exception&&window.console.table)||"undefined"!=typeof navigator&&navigator.userAgent&&navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)&&parseInt(RegExp.$1,10)>=31||"undefined"!=typeof navigator&&navigator.userAgent&&navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/)}function f(a){var c=this.useColors;if(a[0]=(c?"%c":"")+this.namespace+(c?" %c":" ")+a[0]+(c?"%c ":" ")+"+"+b.humanize(this.diff),c){var d="color: "+this.color;a.splice(1,0,d,"color: inherit");var e=0,f=0;a[0].replace(/%[a-zA-Z%]/g,function(a){"%%"!==a&&(e++,"%c"===a&&(f=e))}),a.splice(f,0,d)}}function g(){return"object"==typeof console&&console.log&&Function.prototype.apply.call(console.log,console,arguments)}function h(a){try{null==a?b.storage.removeItem("debug"):b.storage.debug=a}catch(c){}}function i(){var a;try{a=b.storage.debug}catch(c){}return!a&&"undefined"!=typeof d&&"env"in d&&(a=d.env.DEBUG),a}function j(){try{return window.localStorage}catch(a){}}b=a.exports=c(5),b.log=g,b.formatArgs=f,b.save=h,b.load=i,b.useColors=e,b.storage="undefined"!=typeof chrome&&"undefined"!=typeof chrome.storage?chrome.storage.local:j(),b.colors=["lightseagreen","forestgreen","goldenrod","dodgerblue","darkorchid","crimson"],b.formatters.j=function(a){try{return JSON.stringify(a)}catch(b){return"[UnexpectedJSONParseError]: "+b.message}},b.enable(i())}).call(b,c(4))},function(a,b){function c(){throw new Error("setTimeout has not been defined")}function d(){throw new Error("clearTimeout has not been defined")}function e(a){if(k===setTimeout)return setTimeout(a,0);if((k===c||!k)&&setTimeout)return k=setTimeout,setTimeout(a,0);try{return k(a,0)}catch(b){try{return k.call(null,a,0)}catch(b){return k.call(this,a,0)}}}function f(a){if(l===clearTimeout)return clearTimeout(a);if((l===d||!l)&&clearTimeout)return l=clearTimeout,clearTimeout(a);try{return l(a)}catch(b){try{return l.call(null,a)}catch(b){return l.call(this,a)}}}function g(){p&&n&&(p=!1,n.length?o=n.concat(o):q=-1,o.length&&h())}function h(){if(!p){var a=e(g);p=!0;for(var b=o.length;b;){for(n=o,o=[];++q<b;)n&&n[q].run();q=-1,b=o.length}n=null,p=!1,f(a)}}function i(a,b){this.fun=a,this.array=b}function j(){}var k,l,m=a.exports={};!function(){try{k="function"==typeof setTimeout?setTimeout:c}catch(a){k=c}try{l="function"==typeof clearTimeout?clearTimeout:d}catch(a){l=d}}();var n,o=[],p=!1,q=-1;m.nextTick=function(a){var b=new Array(arguments.length-1);if(arguments.length>1)for(var c=1;c<arguments.length;c++)b[c-1]=arguments[c];o.push(new i(a,b)),1!==o.length||p||e(h)},i.prototype.run=function(){this.fun.apply(null,this.array)},m.title="browser",m.browser=!0,m.env={},m.argv=[],m.version="",m.versions={},m.on=j,m.addListener=j,m.once=j,m.off=j,m.removeListener=j,m.removeAllListeners=j,m.emit=j,m.prependListener=j,m.prependOnceListener=j,m.listeners=function(a){return[]},m.binding=function(a){throw new Error("process.binding is not supported")},m.cwd=function(){return"/"},m.chdir=function(a){throw new Error("process.chdir is not supported")},m.umask=function(){return 0}},function(a,b,c){function d(a){var c,d=0;for(c in a)d=(d<<5)-d+a.charCodeAt(c),d|=0;return b.colors[Math.abs(d)%b.colors.length]}function e(a){function c(){if(c.enabled){var a=c,d=+new Date,e=d-(j||d);a.diff=e,a.prev=j,a.curr=d,j=d;for(var f=new Array(arguments.length),g=0;g<f.length;g++)f[g]=arguments[g];f[0]=b.coerce(f[0]),"string"!=typeof f[0]&&f.unshift("%O");var h=0;f[0]=f[0].replace(/%([a-zA-Z%])/g,function(c,d){if("%%"===c)return c;h++;var e=b.formatters[d];if("function"==typeof e){var g=f[h];c=e.call(a,g),f.splice(h,1),h--}return c}),b.formatArgs.call(a,f);var i=c.log||b.log||console.log.bind(console);i.apply(a,f)}}return c.namespace=a,c.enabled=b.enabled(a),c.useColors=b.useColors(),c.color=d(a),"function"==typeof b.init&&b.init(c),c}function f(a){b.save(a),b.names=[],b.skips=[];for(var c=("string"==typeof a?a:"").split(/[\s,]+/),d=c.length,e=0;e<d;e++)c[e]&&(a=c[e].replace(/\*/g,".*?"),"-"===a[0]?b.skips.push(new RegExp("^"+a.substr(1)+"$")):b.names.push(new RegExp("^"+a+"$")))}function g(){b.enable("")}function h(a){var c,d;for(c=0,d=b.skips.length;c<d;c++)if(b.skips[c].test(a))return!1;for(c=0,d=b.names.length;c<d;c++)if(b.names[c].test(a))return!0;return!1}function i(a){return a instanceof Error?a.stack||a.message:a}b=a.exports=e.debug=e["default"]=e,b.coerce=i,b.disable=g,b.enable=f,b.enabled=h,b.humanize=c(6),b.names=[],b.skips=[],b.formatters={};var j},function(a,b){function c(a){if(a=String(a),!(a.length>100)){var b=/^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(a);if(b){var c=parseFloat(b[1]),d=(b[2]||"ms").toLowerCase();switch(d){case"years":case"year":case"yrs":case"yr":case"y":return c*k;case"days":case"day":case"d":return c*j;case"hours":case"hour":case"hrs":case"hr":case"h":return c*i;case"minutes":case"minute":case"mins":case"min":case"m":return c*h;case"seconds":case"second":case"secs":case"sec":case"s":return c*g;case"milliseconds":case"millisecond":case"msecs":case"msec":case"ms":return c;default:return}}}}function d(a){return a>=j?Math.round(a/j)+"d":a>=i?Math.round(a/i)+"h":a>=h?Math.round(a/h)+"m":a>=g?Math.round(a/g)+"s":a+"ms"}function e(a){return f(a,j,"day")||f(a,i,"hour")||f(a,h,"minute")||f(a,g,"second")||a+" ms"}function f(a,b,c){if(!(a<b))return a<1.5*b?Math.floor(a/b)+" "+c:Math.ceil(a/b)+" "+c+"s"}var g=1e3,h=60*g,i=60*h,j=24*i,k=365.25*j;a.exports=function(a,b){b=b||{};var f=typeof a;if("string"===f&&a.length>0)return c(a);if("number"===f&&isNaN(a)===!1)return b["long"]?e(a):d(a);throw new Error("val is not a non-empty string or a valid number. val="+JSON.stringify(a))}},function(a,b,c){function d(){}function e(a){var c=""+a.type;return b.BINARY_EVENT!==a.type&&b.BINARY_ACK!==a.type||(c+=a.attachments+"-"),a.nsp&&"/"!==a.nsp&&(c+=a.nsp+","),null!=a.id&&(c+=a.id),null!=a.data&&(c+=JSON.stringify(a.data)),l("encoded %j as %s",a,c),c}function f(a,b){function c(a){var c=o.deconstructPacket(a),d=e(c.packet),f=c.buffers;f.unshift(d),b(f)}o.removeBlobs(a,c)}function g(){this.reconstructor=null}function h(a){var c=0,d={type:Number(a.charAt(0))};if(null==b.types[d.type])return k();if(b.BINARY_EVENT===d.type||b.BINARY_ACK===d.type){for(var e="";"-"!==a.charAt(++c)&&(e+=a.charAt(c),c!=a.length););if(e!=Number(e)||"-"!==a.charAt(c))throw new Error("Illegal attachments");d.attachments=Number(e)}if("/"===a.charAt(c+1))for(d.nsp="";++c;){var f=a.charAt(c);if(","===f)break;if(d.nsp+=f,c===a.length)break}else d.nsp="/";var g=a.charAt(c+1);if(""!==g&&Number(g)==g){for(d.id="";++c;){var f=a.charAt(c);if(null==f||Number(f)!=f){--c;break}if(d.id+=a.charAt(c),c===a.length)break}d.id=Number(d.id)}return a.charAt(++c)&&(d=i(d,a.substr(c))),l("decoded %s as %j",a,d),d}function i(a,b){try{a.data=JSON.parse(b)}catch(c){return k()}return a}function j(a){this.reconPack=a,this.buffers=[]}function k(){return{type:b.ERROR,data:"parser error"}}var l=c(3)("socket.io-parser"),m=c(8),n=c(9),o=c(11),p=c(12);b.protocol=4,b.types=["CONNECT","DISCONNECT","EVENT","ACK","ERROR","BINARY_EVENT","BINARY_ACK"],b.CONNECT=0,b.DISCONNECT=1,b.EVENT=2,b.ACK=3,b.ERROR=4,b.BINARY_EVENT=5,b.BINARY_ACK=6,b.Encoder=d,b.Decoder=g,d.prototype.encode=function(a,c){if(a.type!==b.EVENT&&a.type!==b.ACK||!n(a.data)||(a.type=a.type===b.EVENT?b.BINARY_EVENT:b.BINARY_ACK),l("encoding packet %j",a),b.BINARY_EVENT===a.type||b.BINARY_ACK===a.type)f(a,c);else{var d=e(a);c([d])}},m(g.prototype),g.prototype.add=function(a){var c;if("string"==typeof a)c=h(a),b.BINARY_EVENT===c.type||b.BINARY_ACK===c.type?(this.reconstructor=new j(c),0===this.reconstructor.reconPack.attachments&&this.emit("decoded",c)):this.emit("decoded",c);else{if(!p(a)&&!a.base64)throw new Error("Unknown type: "+a);if(!this.reconstructor)throw new Error("got binary data when not reconstructing a packet");c=this.reconstructor.takeBinaryData(a),c&&(this.reconstructor=null,this.emit("decoded",c))}},g.prototype.destroy=function(){this.reconstructor&&this.reconstructor.finishedReconstruction()},j.prototype.takeBinaryData=function(a){if(this.buffers.push(a),this.buffers.length===this.reconPack.attachments){var b=o.reconstructPacket(this.reconPack,this.buffers);return this.finishedReconstruction(),b}return null},j.prototype.finishedReconstruction=function(){this.reconPack=null,this.buffers=[]}},function(a,b,c){function d(a){if(a)return e(a)}function e(a){for(var b in d.prototype)a[b]=d.prototype[b];return a}a.exports=d,d.prototype.on=d.prototype.addEventListener=function(a,b){return this._callbacks=this._callbacks||{},(this._callbacks["$"+a]=this._callbacks["$"+a]||[]).push(b),this},d.prototype.once=function(a,b){function c(){this.off(a,c),b.apply(this,arguments)}return c.fn=b,this.on(a,c),this},d.prototype.off=d.prototype.removeListener=d.prototype.removeAllListeners=d.prototype.removeEventListener=function(a,b){if(this._callbacks=this._callbacks||{},0==arguments.length)return this._callbacks={},this;var c=this._callbacks["$"+a];if(!c)return this;if(1==arguments.length)return delete this._callbacks["$"+a],this;for(var d,e=0;e<c.length;e++)if(d=c[e],d===b||d.fn===b){c.splice(e,1);break}return this},d.prototype.emit=function(a){this._callbacks=this._callbacks||{};var b=[].slice.call(arguments,1),c=this._callbacks["$"+a];if(c){c=c.slice(0);for(var d=0,e=c.length;d<e;++d)c[d].apply(this,b)}return this},d.prototype.listeners=function(a){return this._callbacks=this._callbacks||{},this._callbacks["$"+a]||[]},d.prototype.hasListeners=function(a){return!!this.listeners(a).length}},function(a,b,c){(function(b){function d(a){if(!a||"object"!=typeof a)return!1;if(e(a)){for(var c=0,f=a.length;c<f;c++)if(d(a[c]))return!0;return!1}if("function"==typeof b.Buffer&&b.Buffer.isBuffer&&b.Buffer.isBuffer(a)||"function"==typeof b.ArrayBuffer&&a instanceof ArrayBuffer||g&&a instanceof Blob||h&&a instanceof File)return!0;if(a.toJSON&&"function"==typeof a.toJSON&&1===arguments.length)return d(a.toJSON(),!0);for(var i in a)if(Object.prototype.hasOwnProperty.call(a,i)&&d(a[i]))return!0;return!1}var e=c(10),f=Object.prototype.toString,g="function"==typeof b.Blob||"[object BlobConstructor]"===f.call(b.Blob),h="function"==typeof b.File||"[object FileConstructor]"===f.call(b.File);a.exports=d}).call(b,function(){return this}())},function(a,b){var c={}.toString;a.exports=Array.isArray||function(a){return"[object Array]"==c.call(a)}},function(a,b,c){(function(a){function d(a,b){if(!a)return a;if(g(a)){var c={_placeholder:!0,num:b.length};return b.push(a),c}if(f(a)){for(var e=new Array(a.length),h=0;h<a.length;h++)e[h]=d(a[h],b);return e}if("object"==typeof a&&!(a instanceof Date)){var e={};for(var i in a)e[i]=d(a[i],b);return e}return a}function e(a,b){if(!a)return a;if(a&&a._placeholder)return b[a.num];if(f(a))for(var c=0;c<a.length;c++)a[c]=e(a[c],b);else if("object"==typeof a)for(var d in a)a[d]=e(a[d],b);return a}var f=c(10),g=c(12),h=Object.prototype.toString,i="function"==typeof a.Blob||"[object BlobConstructor]"===h.call(a.Blob),j="function"==typeof a.File||"[object FileConstructor]"===h.call(a.File);b.deconstructPacket=function(a){var b=[],c=a.data,e=a;return e.data=d(c,b),e.attachments=b.length,{packet:e,buffers:b}},b.reconstructPacket=function(a,b){return a.data=e(a.data,b),a.attachments=void 0,a},b.removeBlobs=function(a,b){function c(a,h,k){if(!a)return a;if(i&&a instanceof Blob||j&&a instanceof File){d++;var l=new FileReader;l.onload=function(){k?k[h]=this.result:e=this.result,--d||b(e)},l.readAsArrayBuffer(a)}else if(f(a))for(var m=0;m<a.length;m++)c(a[m],m,a);else if("object"==typeof a&&!g(a))for(var n in a)c(a[n],n,a)}var d=0,e=a;c(e),d||b(e)}}).call(b,function(){return this}())},function(a,b){(function(b){function c(a){return b.Buffer&&b.Buffer.isBuffer(a)||b.ArrayBuffer&&a instanceof ArrayBuffer}a.exports=c}).call(b,function(){return this}())},function(a,b,c){"use strict";function d(a,b){if(!(this instanceof d))return new d(a,b);a&&"object"===("undefined"==typeof a?"undefined":e(a))&&(b=a,a=void 0),b=b||{},b.path=b.path||"/socket.io",this.nsps={},this.subs=[],this.opts=b,this.reconnection(b.reconnection!==!1),this.reconnectionAttempts(b.reconnectionAttempts||1/0),this.reconnectionDelay(b.reconnectionDelay||1e3),this.reconnectionDelayMax(b.reconnectionDelayMax||5e3),this.randomizationFactor(b.randomizationFactor||.5),this.backoff=new n({min:this.reconnectionDelay(),max:this.reconnectionDelayMax(),jitter:this.randomizationFactor()}),this.timeout(null==b.timeout?2e4:b.timeout),this.readyState="closed",this.uri=a,this.connecting=[],this.lastPing=null,this.encoding=!1,this.packetBuffer=[];var c=b.parser||i;this.encoder=new c.Encoder,this.decoder=new c.Decoder,this.autoConnect=b.autoConnect!==!1,this.autoConnect&&this.open()}var e="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(a){return typeof a}:function(a){return a&&"function"==typeof Symbol&&a.constructor===Symbol&&a!==Symbol.prototype?"symbol":typeof a},f=c(14),g=c(39),h=c(8),i=c(7),j=c(41),k=c(42),l=c(3)("socket.io-client:manager"),m=c(37),n=c(43),o=Object.prototype.hasOwnProperty;a.exports=d,d.prototype.emitAll=function(){this.emit.apply(this,arguments);for(var a in this.nsps)o.call(this.nsps,a)&&this.nsps[a].emit.apply(this.nsps[a],arguments)},d.prototype.updateSocketIds=function(){for(var a in this.nsps)o.call(this.nsps,a)&&(this.nsps[a].id=this.generateId(a))},d.prototype.generateId=function(a){return("/"===a?"":a+"#")+this.engine.id},h(d.prototype),d.prototype.reconnection=function(a){return arguments.length?(this._reconnection=!!a,this):this._reconnection},d.prototype.reconnectionAttempts=function(a){return arguments.length?(this._reconnectionAttempts=a,this):this._reconnectionAttempts},d.prototype.reconnectionDelay=function(a){return arguments.length?(this._reconnectionDelay=a,this.backoff&&this.backoff.setMin(a),this):this._reconnectionDelay},d.prototype.randomizationFactor=function(a){return arguments.length?(this._randomizationFactor=a,this.backoff&&this.backoff.setJitter(a),this):this._randomizationFactor},d.prototype.reconnectionDelayMax=function(a){return arguments.length?(this._reconnectionDelayMax=a,this.backoff&&this.backoff.setMax(a),this):this._reconnectionDelayMax},d.prototype.timeout=function(a){return arguments.length?(this._timeout=a,this):this._timeout},d.prototype.maybeReconnectOnOpen=function(){!this.reconnecting&&this._reconnection&&0===this.backoff.attempts&&this.reconnect()},d.prototype.open=d.prototype.connect=function(a,b){if(l("readyState %s",this.readyState),~this.readyState.indexOf("open"))return this;l("opening %s",this.uri),this.engine=f(this.uri,this.opts);var c=this.engine,d=this;this.readyState="opening",this.skipReconnect=!1;var e=j(c,"open",function(){d.onopen(),a&&a()}),g=j(c,"error",function(b){if(l("connect_error"),d.cleanup(),d.readyState="closed",d.emitAll("connect_error",b),a){var c=new Error("Connection error");c.data=b,a(c)}else d.maybeReconnectOnOpen()});if(!1!==this._timeout){var h=this._timeout;l("connect attempt will timeout after %d",h);var i=setTimeout(function(){l("connect attempt timed out after %d",h),e.destroy(),c.close(),c.emit("error","timeout"),d.emitAll("connect_timeout",h)},h);this.subs.push({destroy:function(){clearTimeout(i)}})}return this.subs.push(e),this.subs.push(g),this},d.prototype.onopen=function(){l("open"),this.cleanup(),this.readyState="open",this.emit("open");var a=this.engine;this.subs.push(j(a,"data",k(this,"ondata"))),this.subs.push(j(a,"ping",k(this,"onping"))),this.subs.push(j(a,"pong",k(this,"onpong"))),this.subs.push(j(a,"error",k(this,"onerror"))),this.subs.push(j(a,"close",k(this,"onclose"))),this.subs.push(j(this.decoder,"decoded",k(this,"ondecoded")))},d.prototype.onping=function(){this.lastPing=new Date,this.emitAll("ping")},d.prototype.onpong=function(){this.emitAll("pong",new Date-this.lastPing)},d.prototype.ondata=function(a){this.decoder.add(a)},d.prototype.ondecoded=function(a){this.emit("packet",a)},d.prototype.onerror=function(a){l("error",a),this.emitAll("error",a)},d.prototype.socket=function(a,b){function c(){~m(e.connecting,d)||e.connecting.push(d)}var d=this.nsps[a];if(!d){d=new g(this,a,b),this.nsps[a]=d;var e=this;d.on("connecting",c),d.on("connect",function(){d.id=e.generateId(a)}),this.autoConnect&&c()}return d},d.prototype.destroy=function(a){var b=m(this.connecting,a);~b&&this.connecting.splice(b,1),this.connecting.length||this.close()},d.prototype.packet=function(a){l("writing packet %j",a);var b=this;a.query&&0===a.type&&(a.nsp+="?"+a.query),b.encoding?b.packetBuffer.push(a):(b.encoding=!0,this.encoder.encode(a,function(c){for(var d=0;d<c.length;d++)b.engine.write(c[d],a.options);b.encoding=!1,b.processPacketQueue()}))},d.prototype.processPacketQueue=function(){if(this.packetBuffer.length>0&&!this.encoding){var a=this.packetBuffer.shift();this.packet(a)}},d.prototype.cleanup=function(){l("cleanup");for(var a=this.subs.length,b=0;b<a;b++){var c=this.subs.shift();c.destroy()}this.packetBuffer=[],this.encoding=!1,this.lastPing=null,this.decoder.destroy()},d.prototype.close=d.prototype.disconnect=function(){l("disconnect"),this.skipReconnect=!0,this.reconnecting=!1,"opening"===this.readyState&&this.cleanup(),this.backoff.reset(),this.readyState="closed",this.engine&&this.engine.close()},d.prototype.onclose=function(a){l("onclose"),this.cleanup(),this.backoff.reset(),this.readyState="closed",this.emit("close",a),this._reconnection&&!this.skipReconnect&&this.reconnect()},d.prototype.reconnect=function(){if(this.reconnecting||this.skipReconnect)return this;var a=this;if(this.backoff.attempts>=this._reconnectionAttempts)l("reconnect failed"),this.backoff.reset(),this.emitAll("reconnect_failed"),this.reconnecting=!1;else{var b=this.backoff.duration();l("will wait %dms before reconnect attempt",b),this.reconnecting=!0;var c=setTimeout(function(){a.skipReconnect||(l("attempting reconnect"),a.emitAll("reconnect_attempt",a.backoff.attempts),a.emitAll("reconnecting",a.backoff.attempts),a.skipReconnect||a.open(function(b){b?(l("reconnect attempt error"),a.reconnecting=!1,a.reconnect(),a.emitAll("reconnect_error",b.data)):(l("reconnect success"),a.onreconnect())}))},b);this.subs.push({destroy:function(){clearTimeout(c)}})}},d.prototype.onreconnect=function(){var a=this.backoff.attempts;this.reconnecting=!1,this.backoff.reset(),this.updateSocketIds(),this.emitAll("reconnect",a)}},function(a,b,c){a.exports=c(15)},function(a,b,c){a.exports=c(16),a.exports.parser=c(23)},function(a,b,c){(function(b){function d(a,c){if(!(this instanceof d))return new d(a,c);c=c||{},a&&"object"==typeof a&&(c=a,a=null),a?(a=k(a),c.hostname=a.host,c.secure="https"===a.protocol||"wss"===a.protocol,c.port=a.port,a.query&&(c.query=a.query)):c.host&&(c.hostname=k(c.host).host),this.secure=null!=c.secure?c.secure:b.location&&"https:"===location.protocol,c.hostname&&!c.port&&(c.port=this.secure?"443":"80"),this.agent=c.agent||!1,this.hostname=c.hostname||(b.location?location.hostname:"localhost"),this.port=c.port||(b.location&&location.port?location.port:this.secure?443:80),this.query=c.query||{},"string"==typeof this.query&&(this.query=m.decode(this.query)),this.upgrade=!1!==c.upgrade,this.path=(c.path||"/engine.io").replace(/\/$/,"")+"/",this.forceJSONP=!!c.forceJSONP,this.jsonp=!1!==c.jsonp,this.forceBase64=!!c.forceBase64,this.enablesXDR=!!c.enablesXDR,this.timestampParam=c.timestampParam||"t",this.timestampRequests=c.timestampRequests,this.transports=c.transports||["polling","websocket"],this.transportOptions=c.transportOptions||{},this.readyState="",this.writeBuffer=[],this.prevBufferLen=0,this.policyPort=c.policyPort||843,this.rememberUpgrade=c.rememberUpgrade||!1,this.binaryType=null,this.onlyBinaryUpgrades=c.onlyBinaryUpgrades,this.perMessageDeflate=!1!==c.perMessageDeflate&&(c.perMessageDeflate||{}),!0===this.perMessageDeflate&&(this.perMessageDeflate={}),this.perMessageDeflate&&null==this.perMessageDeflate.threshold&&(this.perMessageDeflate.threshold=1024),this.pfx=c.pfx||null,this.key=c.key||null,this.passphrase=c.passphrase||null,this.cert=c.cert||null,this.ca=c.ca||null,this.ciphers=c.ciphers||null,this.rejectUnauthorized=void 0===c.rejectUnauthorized||c.rejectUnauthorized,this.forceNode=!!c.forceNode;var e="object"==typeof b&&b;e.global===e&&(c.extraHeaders&&Object.keys(c.extraHeaders).length>0&&(this.extraHeaders=c.extraHeaders),c.localAddress&&(this.localAddress=c.localAddress)),this.id=null,this.upgrades=null,this.pingInterval=null,this.pingTimeout=null,this.pingIntervalTimer=null,this.pingTimeoutTimer=null,this.open()}function e(a){var b={};for(var c in a)a.hasOwnProperty(c)&&(b[c]=a[c]);return b}var f=c(17),g=c(8),h=c(3)("engine.io-client:socket"),i=c(37),j=c(23),k=c(2),l=c(38),m=c(31);a.exports=d,d.priorWebsocketSuccess=!1,g(d.prototype),d.protocol=j.protocol,d.Socket=d,d.Transport=c(22),d.transports=c(17),d.parser=c(23),d.prototype.createTransport=function(a){h('creating transport "%s"',a);var b=e(this.query);b.EIO=j.protocol,b.transport=a;var c=this.transportOptions[a]||{};this.id&&(b.sid=this.id);var d=new f[a]({query:b,socket:this,agent:c.agent||this.agent,hostname:c.hostname||this.hostname,port:c.port||this.port,secure:c.secure||this.secure,path:c.path||this.path,forceJSONP:c.forceJSONP||this.forceJSONP,jsonp:c.jsonp||this.jsonp,forceBase64:c.forceBase64||this.forceBase64,enablesXDR:c.enablesXDR||this.enablesXDR,timestampRequests:c.timestampRequests||this.timestampRequests,timestampParam:c.timestampParam||this.timestampParam,policyPort:c.policyPort||this.policyPort,pfx:c.pfx||this.pfx,key:c.key||this.key,passphrase:c.passphrase||this.passphrase,cert:c.cert||this.cert,ca:c.ca||this.ca,ciphers:c.ciphers||this.ciphers,rejectUnauthorized:c.rejectUnauthorized||this.rejectUnauthorized,perMessageDeflate:c.perMessageDeflate||this.perMessageDeflate,extraHeaders:c.extraHeaders||this.extraHeaders,forceNode:c.forceNode||this.forceNode,localAddress:c.localAddress||this.localAddress,requestTimeout:c.requestTimeout||this.requestTimeout,protocols:c.protocols||void 0});return d},d.prototype.open=function(){var a;if(this.rememberUpgrade&&d.priorWebsocketSuccess&&this.transports.indexOf("websocket")!==-1)a="websocket";else{if(0===this.transports.length){var b=this;return void setTimeout(function(){b.emit("error","No transports available")},0)}a=this.transports[0]}this.readyState="opening";try{a=this.createTransport(a)}catch(c){return this.transports.shift(),void this.open()}a.open(),this.setTransport(a)},d.prototype.setTransport=function(a){h("setting transport %s",a.name);var b=this;this.transport&&(h("clearing existing transport %s",this.transport.name),this.transport.removeAllListeners()),this.transport=a,a.on("drain",function(){b.onDrain()}).on("packet",function(a){b.onPacket(a)}).on("error",function(a){b.onError(a)}).on("close",function(){b.onClose("transport close")})},d.prototype.probe=function(a){function b(){if(m.onlyBinaryUpgrades){var b=!this.supportsBinary&&m.transport.supportsBinary;l=l||b}l||(h('probe transport "%s" opened',a),k.send([{type:"ping",data:"probe"}]),k.once("packet",function(b){if(!l)if("pong"===b.type&&"probe"===b.data){if(h('probe transport "%s" pong',a),m.upgrading=!0,m.emit("upgrading",k),!k)return;d.priorWebsocketSuccess="websocket"===k.name,h('pausing current transport "%s"',m.transport.name),m.transport.pause(function(){l||"closed"!==m.readyState&&(h("changing transport and sending upgrade packet"),j(),m.setTransport(k),k.send([{type:"upgrade"}]),m.emit("upgrade",k),k=null,m.upgrading=!1,m.flush())})}else{h('probe transport "%s" failed',a);var c=new Error("probe error");c.transport=k.name,m.emit("upgradeError",c)}}))}function c(){l||(l=!0,j(),k.close(),k=null)}function e(b){var d=new Error("probe error: "+b);d.transport=k.name,c(),h('probe transport "%s" failed because of error: %s',a,b),m.emit("upgradeError",d)}function f(){e("transport closed")}function g(){e("socket closed")}function i(a){k&&a.name!==k.name&&(h('"%s" works - aborting "%s"',a.name,k.name),c())}function j(){k.removeListener("open",b),k.removeListener("error",e),k.removeListener("close",f),m.removeListener("close",g),m.removeListener("upgrading",i)}h('probing transport "%s"',a);var k=this.createTransport(a,{probe:1}),l=!1,m=this;d.priorWebsocketSuccess=!1,k.once("open",b),k.once("error",e),k.once("close",f),this.once("close",g),this.once("upgrading",i),k.open()},d.prototype.onOpen=function(){if(h("socket open"),this.readyState="open",d.priorWebsocketSuccess="websocket"===this.transport.name,this.emit("open"),this.flush(),"open"===this.readyState&&this.upgrade&&this.transport.pause){h("starting upgrade probes");for(var a=0,b=this.upgrades.length;a<b;a++)this.probe(this.upgrades[a])}},d.prototype.onPacket=function(a){if("opening"===this.readyState||"open"===this.readyState||"closing"===this.readyState)switch(h('socket receive: type "%s", data "%s"',a.type,a.data),this.emit("packet",a),this.emit("heartbeat"),a.type){case"open":this.onHandshake(l(a.data));break;case"pong":this.setPing(),this.emit("pong");break;case"error":var b=new Error("server error");b.code=a.data,this.onError(b);break;case"message":this.emit("data",a.data),this.emit("message",a.data)}else h('packet received with socket readyState "%s"',this.readyState)},d.prototype.onHandshake=function(a){this.emit("handshake",a),this.id=a.sid,this.transport.query.sid=a.sid,this.upgrades=this.filterUpgrades(a.upgrades),this.pingInterval=a.pingInterval,this.pingTimeout=a.pingTimeout,this.onOpen(),"closed"!==this.readyState&&(this.setPing(),this.removeListener("heartbeat",this.onHeartbeat),this.on("heartbeat",this.onHeartbeat))},d.prototype.onHeartbeat=function(a){clearTimeout(this.pingTimeoutTimer);var b=this;b.pingTimeoutTimer=setTimeout(function(){"closed"!==b.readyState&&b.onClose("ping timeout")},a||b.pingInterval+b.pingTimeout)},d.prototype.setPing=function(){var a=this;clearTimeout(a.pingIntervalTimer),a.pingIntervalTimer=setTimeout(function(){h("writing ping packet - expecting pong within %sms",a.pingTimeout),a.ping(),a.onHeartbeat(a.pingTimeout)},a.pingInterval)},d.prototype.ping=function(){var a=this;this.sendPacket("ping",function(){a.emit("ping")})},d.prototype.onDrain=function(){this.writeBuffer.splice(0,this.prevBufferLen),this.prevBufferLen=0,0===this.writeBuffer.length?this.emit("drain"):this.flush()},d.prototype.flush=function(){"closed"!==this.readyState&&this.transport.writable&&!this.upgrading&&this.writeBuffer.length&&(h("flushing %d packets in socket",this.writeBuffer.length),this.transport.send(this.writeBuffer),this.prevBufferLen=this.writeBuffer.length,this.emit("flush"))},d.prototype.write=d.prototype.send=function(a,b,c){return this.sendPacket("message",a,b,c),this},d.prototype.sendPacket=function(a,b,c,d){if("function"==typeof b&&(d=b,b=void 0),"function"==typeof c&&(d=c,c=null),"closing"!==this.readyState&&"closed"!==this.readyState){c=c||{},c.compress=!1!==c.compress;var e={type:a,data:b,options:c};this.emit("packetCreate",e),this.writeBuffer.push(e),d&&this.once("flush",d),this.flush()}},d.prototype.close=function(){function a(){d.onClose("forced close"),h("socket closing - telling transport to close"),d.transport.close()}function b(){d.removeListener("upgrade",b),d.removeListener("upgradeError",b),a()}function c(){d.once("upgrade",b),d.once("upgradeError",b)}if("opening"===this.readyState||"open"===this.readyState){this.readyState="closing";var d=this;this.writeBuffer.length?this.once("drain",function(){this.upgrading?c():a()}):this.upgrading?c():a()}return this},d.prototype.onError=function(a){h("socket error %j",a),d.priorWebsocketSuccess=!1,this.emit("error",a),this.onClose("transport error",a)},d.prototype.onClose=function(a,b){if("opening"===this.readyState||"open"===this.readyState||"closing"===this.readyState){h('socket close with reason: "%s"',a);var c=this;clearTimeout(this.pingIntervalTimer),clearTimeout(this.pingTimeoutTimer),this.transport.removeAllListeners("close"),this.transport.close(),this.transport.removeAllListeners(),this.readyState="closed",this.id=null,this.emit("close",a,b),c.writeBuffer=[],c.prevBufferLen=0}},d.prototype.filterUpgrades=function(a){for(var b=[],c=0,d=a.length;c<d;c++)~i(this.transports,a[c])&&b.push(a[c]);return b}}).call(b,function(){return this}())},function(a,b,c){(function(a){function d(b){var c,d=!1,h=!1,i=!1!==b.jsonp;if(a.location){var j="https:"===location.protocol,k=location.port;k||(k=j?443:80),d=b.hostname!==location.hostname||k!==b.port,h=b.secure!==j}if(b.xdomain=d,b.xscheme=h,c=new e(b),"open"in c&&!b.forceJSONP)return new f(b);if(!i)throw new Error("JSONP disabled");return new g(b)}var e=c(18),f=c(20),g=c(34),h=c(35);b.polling=d,b.websocket=h}).call(b,function(){return this}())},function(a,b,c){(function(b){var d=c(19);a.exports=function(a){var c=a.xdomain,e=a.xscheme,f=a.enablesXDR;try{if("undefined"!=typeof XMLHttpRequest&&(!c||d))return new XMLHttpRequest}catch(g){}try{if("undefined"!=typeof XDomainRequest&&!e&&f)return new XDomainRequest}catch(g){}if(!c)try{
+return new(b[["Active"].concat("Object").join("X")])("Microsoft.XMLHTTP")}catch(g){}}}).call(b,function(){return this}())},function(a,b){try{a.exports="undefined"!=typeof XMLHttpRequest&&"withCredentials"in new XMLHttpRequest}catch(c){a.exports=!1}},function(a,b,c){(function(b){function d(){}function e(a){if(i.call(this,a),this.requestTimeout=a.requestTimeout,this.extraHeaders=a.extraHeaders,b.location){var c="https:"===location.protocol,d=location.port;d||(d=c?443:80),this.xd=a.hostname!==b.location.hostname||d!==a.port,this.xs=a.secure!==c}}function f(a){this.method=a.method||"GET",this.uri=a.uri,this.xd=!!a.xd,this.xs=!!a.xs,this.async=!1!==a.async,this.data=void 0!==a.data?a.data:null,this.agent=a.agent,this.isBinary=a.isBinary,this.supportsBinary=a.supportsBinary,this.enablesXDR=a.enablesXDR,this.requestTimeout=a.requestTimeout,this.pfx=a.pfx,this.key=a.key,this.passphrase=a.passphrase,this.cert=a.cert,this.ca=a.ca,this.ciphers=a.ciphers,this.rejectUnauthorized=a.rejectUnauthorized,this.extraHeaders=a.extraHeaders,this.create()}function g(){for(var a in f.requests)f.requests.hasOwnProperty(a)&&f.requests[a].abort()}var h=c(18),i=c(21),j=c(8),k=c(32),l=c(3)("engine.io-client:polling-xhr");a.exports=e,a.exports.Request=f,k(e,i),e.prototype.supportsBinary=!0,e.prototype.request=function(a){return a=a||{},a.uri=this.uri(),a.xd=this.xd,a.xs=this.xs,a.agent=this.agent||!1,a.supportsBinary=this.supportsBinary,a.enablesXDR=this.enablesXDR,a.pfx=this.pfx,a.key=this.key,a.passphrase=this.passphrase,a.cert=this.cert,a.ca=this.ca,a.ciphers=this.ciphers,a.rejectUnauthorized=this.rejectUnauthorized,a.requestTimeout=this.requestTimeout,a.extraHeaders=this.extraHeaders,new f(a)},e.prototype.doWrite=function(a,b){var c="string"!=typeof a&&void 0!==a,d=this.request({method:"POST",data:a,isBinary:c}),e=this;d.on("success",b),d.on("error",function(a){e.onError("xhr post error",a)}),this.sendXhr=d},e.prototype.doPoll=function(){l("xhr poll");var a=this.request(),b=this;a.on("data",function(a){b.onData(a)}),a.on("error",function(a){b.onError("xhr poll error",a)}),this.pollXhr=a},j(f.prototype),f.prototype.create=function(){var a={agent:this.agent,xdomain:this.xd,xscheme:this.xs,enablesXDR:this.enablesXDR};a.pfx=this.pfx,a.key=this.key,a.passphrase=this.passphrase,a.cert=this.cert,a.ca=this.ca,a.ciphers=this.ciphers,a.rejectUnauthorized=this.rejectUnauthorized;var c=this.xhr=new h(a),d=this;try{l("xhr open %s: %s",this.method,this.uri),c.open(this.method,this.uri,this.async);try{if(this.extraHeaders){c.setDisableHeaderCheck&&c.setDisableHeaderCheck(!0);for(var e in this.extraHeaders)this.extraHeaders.hasOwnProperty(e)&&c.setRequestHeader(e,this.extraHeaders[e])}}catch(g){}if("POST"===this.method)try{this.isBinary?c.setRequestHeader("Content-type","application/octet-stream"):c.setRequestHeader("Content-type","text/plain;charset=UTF-8")}catch(g){}try{c.setRequestHeader("Accept","*/*")}catch(g){}"withCredentials"in c&&(c.withCredentials=!0),this.requestTimeout&&(c.timeout=this.requestTimeout),this.hasXDR()?(c.onload=function(){d.onLoad()},c.onerror=function(){d.onError(c.responseText)}):c.onreadystatechange=function(){if(2===c.readyState){var a;try{a=c.getResponseHeader("Content-Type")}catch(b){}"application/octet-stream"===a&&(c.responseType="arraybuffer")}4===c.readyState&&(200===c.status||1223===c.status?d.onLoad():setTimeout(function(){d.onError(c.status)},0))},l("xhr data %s",this.data),c.send(this.data)}catch(g){return void setTimeout(function(){d.onError(g)},0)}b.document&&(this.index=f.requestsCount++,f.requests[this.index]=this)},f.prototype.onSuccess=function(){this.emit("success"),this.cleanup()},f.prototype.onData=function(a){this.emit("data",a),this.onSuccess()},f.prototype.onError=function(a){this.emit("error",a),this.cleanup(!0)},f.prototype.cleanup=function(a){if("undefined"!=typeof this.xhr&&null!==this.xhr){if(this.hasXDR()?this.xhr.onload=this.xhr.onerror=d:this.xhr.onreadystatechange=d,a)try{this.xhr.abort()}catch(c){}b.document&&delete f.requests[this.index],this.xhr=null}},f.prototype.onLoad=function(){var a;try{var b;try{b=this.xhr.getResponseHeader("Content-Type")}catch(c){}a="application/octet-stream"===b?this.xhr.response||this.xhr.responseText:this.xhr.responseText}catch(c){this.onError(c)}null!=a&&this.onData(a)},f.prototype.hasXDR=function(){return"undefined"!=typeof b.XDomainRequest&&!this.xs&&this.enablesXDR},f.prototype.abort=function(){this.cleanup()},f.requestsCount=0,f.requests={},b.document&&(b.attachEvent?b.attachEvent("onunload",g):b.addEventListener&&b.addEventListener("beforeunload",g,!1))}).call(b,function(){return this}())},function(a,b,c){function d(a){var b=a&&a.forceBase64;k&&!b||(this.supportsBinary=!1),e.call(this,a)}var e=c(22),f=c(31),g=c(23),h=c(32),i=c(33),j=c(3)("engine.io-client:polling");a.exports=d;var k=function(){var a=c(18),b=new a({xdomain:!1});return null!=b.responseType}();h(d,e),d.prototype.name="polling",d.prototype.doOpen=function(){this.poll()},d.prototype.pause=function(a){function b(){j("paused"),c.readyState="paused",a()}var c=this;if(this.readyState="pausing",this.polling||!this.writable){var d=0;this.polling&&(j("we are currently polling - waiting to pause"),d++,this.once("pollComplete",function(){j("pre-pause polling complete"),--d||b()})),this.writable||(j("we are currently writing - waiting to pause"),d++,this.once("drain",function(){j("pre-pause writing complete"),--d||b()}))}else b()},d.prototype.poll=function(){j("polling"),this.polling=!0,this.doPoll(),this.emit("poll")},d.prototype.onData=function(a){var b=this;j("polling got data %s",a);var c=function(a,c,d){return"opening"===b.readyState&&b.onOpen(),"close"===a.type?(b.onClose(),!1):void b.onPacket(a)};g.decodePayload(a,this.socket.binaryType,c),"closed"!==this.readyState&&(this.polling=!1,this.emit("pollComplete"),"open"===this.readyState?this.poll():j('ignoring poll - transport state "%s"',this.readyState))},d.prototype.doClose=function(){function a(){j("writing close packet"),b.write([{type:"close"}])}var b=this;"open"===this.readyState?(j("transport open - closing"),a()):(j("transport not open - deferring close"),this.once("open",a))},d.prototype.write=function(a){var b=this;this.writable=!1;var c=function(){b.writable=!0,b.emit("drain")};g.encodePayload(a,this.supportsBinary,function(a){b.doWrite(a,c)})},d.prototype.uri=function(){var a=this.query||{},b=this.secure?"https":"http",c="";!1!==this.timestampRequests&&(a[this.timestampParam]=i()),this.supportsBinary||a.sid||(a.b64=1),a=f.encode(a),this.port&&("https"===b&&443!==Number(this.port)||"http"===b&&80!==Number(this.port))&&(c=":"+this.port),a.length&&(a="?"+a);var d=this.hostname.indexOf(":")!==-1;return b+"://"+(d?"["+this.hostname+"]":this.hostname)+c+this.path+a}},function(a,b,c){function d(a){this.path=a.path,this.hostname=a.hostname,this.port=a.port,this.secure=a.secure,this.query=a.query,this.timestampParam=a.timestampParam,this.timestampRequests=a.timestampRequests,this.readyState="",this.agent=a.agent||!1,this.socket=a.socket,this.enablesXDR=a.enablesXDR,this.pfx=a.pfx,this.key=a.key,this.passphrase=a.passphrase,this.cert=a.cert,this.ca=a.ca,this.ciphers=a.ciphers,this.rejectUnauthorized=a.rejectUnauthorized,this.forceNode=a.forceNode,this.extraHeaders=a.extraHeaders,this.localAddress=a.localAddress}var e=c(23),f=c(8);a.exports=d,f(d.prototype),d.prototype.onError=function(a,b){var c=new Error(a);return c.type="TransportError",c.description=b,this.emit("error",c),this},d.prototype.open=function(){return"closed"!==this.readyState&&""!==this.readyState||(this.readyState="opening",this.doOpen()),this},d.prototype.close=function(){return"opening"!==this.readyState&&"open"!==this.readyState||(this.doClose(),this.onClose()),this},d.prototype.send=function(a){if("open"!==this.readyState)throw new Error("Transport not open");this.write(a)},d.prototype.onOpen=function(){this.readyState="open",this.writable=!0,this.emit("open")},d.prototype.onData=function(a){var b=e.decodePacket(a,this.socket.binaryType);this.onPacket(b)},d.prototype.onPacket=function(a){this.emit("packet",a)},d.prototype.onClose=function(){this.readyState="closed",this.emit("close")}},function(a,b,c){(function(a){function d(a,c){var d="b"+b.packets[a.type]+a.data.data;return c(d)}function e(a,c,d){if(!c)return b.encodeBase64Packet(a,d);var e=a.data,f=new Uint8Array(e),g=new Uint8Array(1+e.byteLength);g[0]=s[a.type];for(var h=0;h<f.length;h++)g[h+1]=f[h];return d(g.buffer)}function f(a,c,d){if(!c)return b.encodeBase64Packet(a,d);var e=new FileReader;return e.onload=function(){a.data=e.result,b.encodePacket(a,c,!0,d)},e.readAsArrayBuffer(a.data)}function g(a,c,d){if(!c)return b.encodeBase64Packet(a,d);if(r)return f(a,c,d);var e=new Uint8Array(1);e[0]=s[a.type];var g=new v([e.buffer,a.data]);return d(g)}function h(a){try{a=o.decode(a,{strict:!1})}catch(b){return!1}return a}function i(a,b,c){for(var d=new Array(a.length),e=n(a.length,c),f=function(a,c,e){b(c,function(b,c){d[a]=c,e(b,d)})},g=0;g<a.length;g++)f(g,a[g],e)}var j,k=c(24),l=c(9),m=c(25),n=c(26),o=c(27);a&&a.ArrayBuffer&&(j=c(29));var p="undefined"!=typeof navigator&&/Android/i.test(navigator.userAgent),q="undefined"!=typeof navigator&&/PhantomJS/i.test(navigator.userAgent),r=p||q;b.protocol=3;var s=b.packets={open:0,close:1,ping:2,pong:3,message:4,upgrade:5,noop:6},t=k(s),u={type:"error",data:"parser error"},v=c(30);b.encodePacket=function(b,c,f,h){"function"==typeof c&&(h=c,c=!1),"function"==typeof f&&(h=f,f=null);var i=void 0===b.data?void 0:b.data.buffer||b.data;if(a.ArrayBuffer&&i instanceof ArrayBuffer)return e(b,c,h);if(v&&i instanceof a.Blob)return g(b,c,h);if(i&&i.base64)return d(b,h);var j=s[b.type];return void 0!==b.data&&(j+=f?o.encode(String(b.data),{strict:!1}):String(b.data)),h(""+j)},b.encodeBase64Packet=function(c,d){var e="b"+b.packets[c.type];if(v&&c.data instanceof a.Blob){var f=new FileReader;return f.onload=function(){var a=f.result.split(",")[1];d(e+a)},f.readAsDataURL(c.data)}var g;try{g=String.fromCharCode.apply(null,new Uint8Array(c.data))}catch(h){for(var i=new Uint8Array(c.data),j=new Array(i.length),k=0;k<i.length;k++)j[k]=i[k];g=String.fromCharCode.apply(null,j)}return e+=a.btoa(g),d(e)},b.decodePacket=function(a,c,d){if(void 0===a)return u;if("string"==typeof a){if("b"===a.charAt(0))return b.decodeBase64Packet(a.substr(1),c);if(d&&(a=h(a),a===!1))return u;var e=a.charAt(0);return Number(e)==e&&t[e]?a.length>1?{type:t[e],data:a.substring(1)}:{type:t[e]}:u}var f=new Uint8Array(a),e=f[0],g=m(a,1);return v&&"blob"===c&&(g=new v([g])),{type:t[e],data:g}},b.decodeBase64Packet=function(a,b){var c=t[a.charAt(0)];if(!j)return{type:c,data:{base64:!0,data:a.substr(1)}};var d=j.decode(a.substr(1));return"blob"===b&&v&&(d=new v([d])),{type:c,data:d}},b.encodePayload=function(a,c,d){function e(a){return a.length+":"+a}function f(a,d){b.encodePacket(a,!!g&&c,!1,function(a){d(null,e(a))})}"function"==typeof c&&(d=c,c=null);var g=l(a);return c&&g?v&&!r?b.encodePayloadAsBlob(a,d):b.encodePayloadAsArrayBuffer(a,d):a.length?void i(a,f,function(a,b){return d(b.join(""))}):d("0:")},b.decodePayload=function(a,c,d){if("string"!=typeof a)return b.decodePayloadAsBinary(a,c,d);"function"==typeof c&&(d=c,c=null);var e;if(""===a)return d(u,0,1);for(var f,g,h="",i=0,j=a.length;i<j;i++){var k=a.charAt(i);if(":"===k){if(""===h||h!=(f=Number(h)))return d(u,0,1);if(g=a.substr(i+1,f),h!=g.length)return d(u,0,1);if(g.length){if(e=b.decodePacket(g,c,!1),u.type===e.type&&u.data===e.data)return d(u,0,1);var l=d(e,i+f,j);if(!1===l)return}i+=f,h=""}else h+=k}return""!==h?d(u,0,1):void 0},b.encodePayloadAsArrayBuffer=function(a,c){function d(a,c){b.encodePacket(a,!0,!0,function(a){return c(null,a)})}return a.length?void i(a,d,function(a,b){var d=b.reduce(function(a,b){var c;return c="string"==typeof b?b.length:b.byteLength,a+c.toString().length+c+2},0),e=new Uint8Array(d),f=0;return b.forEach(function(a){var b="string"==typeof a,c=a;if(b){for(var d=new Uint8Array(a.length),g=0;g<a.length;g++)d[g]=a.charCodeAt(g);c=d.buffer}b?e[f++]=0:e[f++]=1;for(var h=c.byteLength.toString(),g=0;g<h.length;g++)e[f++]=parseInt(h[g]);e[f++]=255;for(var d=new Uint8Array(c),g=0;g<d.length;g++)e[f++]=d[g]}),c(e.buffer)}):c(new ArrayBuffer(0))},b.encodePayloadAsBlob=function(a,c){function d(a,c){b.encodePacket(a,!0,!0,function(a){var b=new Uint8Array(1);if(b[0]=1,"string"==typeof a){for(var d=new Uint8Array(a.length),e=0;e<a.length;e++)d[e]=a.charCodeAt(e);a=d.buffer,b[0]=0}for(var f=a instanceof ArrayBuffer?a.byteLength:a.size,g=f.toString(),h=new Uint8Array(g.length+1),e=0;e<g.length;e++)h[e]=parseInt(g[e]);if(h[g.length]=255,v){var i=new v([b.buffer,h.buffer,a]);c(null,i)}})}i(a,d,function(a,b){return c(new v(b))})},b.decodePayloadAsBinary=function(a,c,d){"function"==typeof c&&(d=c,c=null);for(var e=a,f=[];e.byteLength>0;){for(var g=new Uint8Array(e),h=0===g[0],i="",j=1;255!==g[j];j++){if(i.length>310)return d(u,0,1);i+=g[j]}e=m(e,2+i.length),i=parseInt(i);var k=m(e,0,i);if(h)try{k=String.fromCharCode.apply(null,new Uint8Array(k))}catch(l){var n=new Uint8Array(k);k="";for(var j=0;j<n.length;j++)k+=String.fromCharCode(n[j])}f.push(k),e=m(e,i)}var o=f.length;f.forEach(function(a,e){d(b.decodePacket(a,c,!0),e,o)})}}).call(b,function(){return this}())},function(a,b){a.exports=Object.keys||function(a){var b=[],c=Object.prototype.hasOwnProperty;for(var d in a)c.call(a,d)&&b.push(d);return b}},function(a,b){a.exports=function(a,b,c){var d=a.byteLength;if(b=b||0,c=c||d,a.slice)return a.slice(b,c);if(b<0&&(b+=d),c<0&&(c+=d),c>d&&(c=d),b>=d||b>=c||0===d)return new ArrayBuffer(0);for(var e=new Uint8Array(a),f=new Uint8Array(c-b),g=b,h=0;g<c;g++,h++)f[h]=e[g];return f.buffer}},function(a,b){function c(a,b,c){function e(a,d){if(e.count<=0)throw new Error("after called too many times");--e.count,a?(f=!0,b(a),b=c):0!==e.count||f||b(null,d)}var f=!1;return c=c||d,e.count=a,0===a?b():e}function d(){}a.exports=c},function(a,b,c){var d;(function(a,e){!function(f){function g(a){for(var b,c,d=[],e=0,f=a.length;e<f;)b=a.charCodeAt(e++),b>=55296&&b<=56319&&e<f?(c=a.charCodeAt(e++),56320==(64512&c)?d.push(((1023&b)<<10)+(1023&c)+65536):(d.push(b),e--)):d.push(b);return d}function h(a){for(var b,c=a.length,d=-1,e="";++d<c;)b=a[d],b>65535&&(b-=65536,e+=u(b>>>10&1023|55296),b=56320|1023&b),e+=u(b);return e}function i(a,b){if(a>=55296&&a<=57343){if(b)throw Error("Lone surrogate U+"+a.toString(16).toUpperCase()+" is not a scalar value");return!1}return!0}function j(a,b){return u(a>>b&63|128)}function k(a,b){if(0==(4294967168&a))return u(a);var c="";return 0==(4294965248&a)?c=u(a>>6&31|192):0==(4294901760&a)?(i(a,b)||(a=65533),c=u(a>>12&15|224),c+=j(a,6)):0==(4292870144&a)&&(c=u(a>>18&7|240),c+=j(a,12),c+=j(a,6)),c+=u(63&a|128)}function l(a,b){b=b||{};for(var c,d=!1!==b.strict,e=g(a),f=e.length,h=-1,i="";++h<f;)c=e[h],i+=k(c,d);return i}function m(){if(t>=s)throw Error("Invalid byte index");var a=255&r[t];if(t++,128==(192&a))return 63&a;throw Error("Invalid continuation byte")}function n(a){var b,c,d,e,f;if(t>s)throw Error("Invalid byte index");if(t==s)return!1;if(b=255&r[t],t++,0==(128&b))return b;if(192==(224&b)){if(c=m(),f=(31&b)<<6|c,f>=128)return f;throw Error("Invalid continuation byte")}if(224==(240&b)){if(c=m(),d=m(),f=(15&b)<<12|c<<6|d,f>=2048)return i(f,a)?f:65533;throw Error("Invalid continuation byte")}if(240==(248&b)&&(c=m(),d=m(),e=m(),f=(7&b)<<18|c<<12|d<<6|e,f>=65536&&f<=1114111))return f;throw Error("Invalid UTF-8 detected")}function o(a,b){b=b||{};var c=!1!==b.strict;r=g(a),s=r.length,t=0;for(var d,e=[];(d=n(c))!==!1;)e.push(d);return h(e)}var p="object"==typeof b&&b,q=("object"==typeof a&&a&&a.exports==p&&a,"object"==typeof e&&e);q.global!==q&&q.window!==q||(f=q);var r,s,t,u=String.fromCharCode,v={version:"2.1.2",encode:l,decode:o};d=function(){return v}.call(b,c,b,a),!(void 0!==d&&(a.exports=d))}(this)}).call(b,c(28)(a),function(){return this}())},function(a,b){a.exports=function(a){return a.webpackPolyfill||(a.deprecate=function(){},a.paths=[],a.children=[],a.webpackPolyfill=1),a}},function(a,b){!function(){"use strict";for(var a="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",c=new Uint8Array(256),d=0;d<a.length;d++)c[a.charCodeAt(d)]=d;b.encode=function(b){var c,d=new Uint8Array(b),e=d.length,f="";for(c=0;c<e;c+=3)f+=a[d[c]>>2],f+=a[(3&d[c])<<4|d[c+1]>>4],f+=a[(15&d[c+1])<<2|d[c+2]>>6],f+=a[63&d[c+2]];return e%3===2?f=f.substring(0,f.length-1)+"=":e%3===1&&(f=f.substring(0,f.length-2)+"=="),f},b.decode=function(a){var b,d,e,f,g,h=.75*a.length,i=a.length,j=0;"="===a[a.length-1]&&(h--,"="===a[a.length-2]&&h--);var k=new ArrayBuffer(h),l=new Uint8Array(k);for(b=0;b<i;b+=4)d=c[a.charCodeAt(b)],e=c[a.charCodeAt(b+1)],f=c[a.charCodeAt(b+2)],g=c[a.charCodeAt(b+3)],l[j++]=d<<2|e>>4,l[j++]=(15&e)<<4|f>>2,l[j++]=(3&f)<<6|63&g;return k}}()},function(a,b){(function(b){function c(a){for(var b=0;b<a.length;b++){var c=a[b];if(c.buffer instanceof ArrayBuffer){var d=c.buffer;if(c.byteLength!==d.byteLength){var e=new Uint8Array(c.byteLength);e.set(new Uint8Array(d,c.byteOffset,c.byteLength)),d=e.buffer}a[b]=d}}}function d(a,b){b=b||{};var d=new f;c(a);for(var e=0;e<a.length;e++)d.append(a[e]);return b.type?d.getBlob(b.type):d.getBlob()}function e(a,b){return c(a),new Blob(a,b||{})}var f=b.BlobBuilder||b.WebKitBlobBuilder||b.MSBlobBuilder||b.MozBlobBuilder,g=function(){try{var a=new Blob(["hi"]);return 2===a.size}catch(b){return!1}}(),h=g&&function(){try{var a=new Blob([new Uint8Array([1,2])]);return 2===a.size}catch(b){return!1}}(),i=f&&f.prototype.append&&f.prototype.getBlob;a.exports=function(){return g?h?b.Blob:e:i?d:void 0}()}).call(b,function(){return this}())},function(a,b){b.encode=function(a){var b="";for(var c in a)a.hasOwnProperty(c)&&(b.length&&(b+="&"),b+=encodeURIComponent(c)+"="+encodeURIComponent(a[c]));return b},b.decode=function(a){for(var b={},c=a.split("&"),d=0,e=c.length;d<e;d++){var f=c[d].split("=");b[decodeURIComponent(f[0])]=decodeURIComponent(f[1])}return b}},function(a,b){a.exports=function(a,b){var c=function(){};c.prototype=b.prototype,a.prototype=new c,a.prototype.constructor=a}},function(a,b){"use strict";function c(a){var b="";do b=g[a%h]+b,a=Math.floor(a/h);while(a>0);return b}function d(a){var b=0;for(k=0;k<a.length;k++)b=b*h+i[a.charAt(k)];return b}function e(){var a=c(+new Date);return a!==f?(j=0,f=a):a+"."+c(j++)}for(var f,g="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_".split(""),h=64,i={},j=0,k=0;k<h;k++)i[g[k]]=k;e.encode=c,e.decode=d,a.exports=e},function(a,b,c){(function(b){function d(){}function e(a){f.call(this,a),this.query=this.query||{},h||(b.___eio||(b.___eio=[]),h=b.___eio),this.index=h.length;var c=this;h.push(function(a){c.onData(a)}),this.query.j=this.index,b.document&&b.addEventListener&&b.addEventListener("beforeunload",function(){c.script&&(c.script.onerror=d)},!1)}var f=c(21),g=c(32);a.exports=e;var h,i=/\n/g,j=/\\n/g;g(e,f),e.prototype.supportsBinary=!1,e.prototype.doClose=function(){this.script&&(this.script.parentNode.removeChild(this.script),this.script=null),this.form&&(this.form.parentNode.removeChild(this.form),this.form=null,this.iframe=null),f.prototype.doClose.call(this)},e.prototype.doPoll=function(){var a=this,b=document.createElement("script");this.script&&(this.script.parentNode.removeChild(this.script),this.script=null),b.async=!0,b.src=this.uri(),b.onerror=function(b){a.onError("jsonp poll error",b)};var c=document.getElementsByTagName("script")[0];c?c.parentNode.insertBefore(b,c):(document.head||document.body).appendChild(b),this.script=b;var d="undefined"!=typeof navigator&&/gecko/i.test(navigator.userAgent);d&&setTimeout(function(){var a=document.createElement("iframe");document.body.appendChild(a),document.body.removeChild(a)},100)},e.prototype.doWrite=function(a,b){function c(){d(),b()}function d(){if(e.iframe)try{e.form.removeChild(e.iframe)}catch(a){e.onError("jsonp polling iframe removal error",a)}try{var b='<iframe src="javascript:0" name="'+e.iframeId+'">';f=document.createElement(b)}catch(a){f=document.createElement("iframe"),f.name=e.iframeId,f.src="javascript:0"}f.id=e.iframeId,e.form.appendChild(f),e.iframe=f}var e=this;if(!this.form){var f,g=document.createElement("form"),h=document.createElement("textarea"),k=this.iframeId="eio_iframe_"+this.index;g.className="socketio",g.style.position="absolute",g.style.top="-1000px",g.style.left="-1000px",g.target=k,g.method="POST",g.setAttribute("accept-charset","utf-8"),h.name="d",g.appendChild(h),document.body.appendChild(g),this.form=g,this.area=h}this.form.action=this.uri(),d(),a=a.replace(j,"\\\n"),this.area.value=a.replace(i,"\\n");try{this.form.submit()}catch(l){}this.iframe.attachEvent?this.iframe.onreadystatechange=function(){"complete"===e.iframe.readyState&&c()}:this.iframe.onload=c}}).call(b,function(){return this}())},function(a,b,c){(function(b){function d(a){var b=a&&a.forceBase64;b&&(this.supportsBinary=!1),this.perMessageDeflate=a.perMessageDeflate,this.usingBrowserWebSocket=l&&!a.forceNode,this.protocols=a.protocols,this.usingBrowserWebSocket||(n=e),f.call(this,a)}var e,f=c(22),g=c(23),h=c(31),i=c(32),j=c(33),k=c(3)("engine.io-client:websocket"),l=b.WebSocket||b.MozWebSocket;if("undefined"==typeof window)try{e=c(36)}catch(m){}var n=l;n||"undefined"!=typeof window||(n=e),a.exports=d,i(d,f),d.prototype.name="websocket",d.prototype.supportsBinary=!0,d.prototype.doOpen=function(){if(this.check()){var a=this.uri(),b=this.protocols,c={agent:this.agent,perMessageDeflate:this.perMessageDeflate};c.pfx=this.pfx,c.key=this.key,c.passphrase=this.passphrase,c.cert=this.cert,c.ca=this.ca,c.ciphers=this.ciphers,c.rejectUnauthorized=this.rejectUnauthorized,this.extraHeaders&&(c.headers=this.extraHeaders),this.localAddress&&(c.localAddress=this.localAddress);try{this.ws=this.usingBrowserWebSocket?b?new n(a,b):new n(a):new n(a,b,c)}catch(d){return this.emit("error",d)}void 0===this.ws.binaryType&&(this.supportsBinary=!1),this.ws.supports&&this.ws.supports.binary?(this.supportsBinary=!0,this.ws.binaryType="nodebuffer"):this.ws.binaryType="arraybuffer",this.addEventListeners()}},d.prototype.addEventListeners=function(){var a=this;this.ws.onopen=function(){a.onOpen()},this.ws.onclose=function(){a.onClose()},this.ws.onmessage=function(b){a.onData(b.data)},this.ws.onerror=function(b){a.onError("websocket error",b)}},d.prototype.write=function(a){function c(){d.emit("flush"),setTimeout(function(){d.writable=!0,d.emit("drain")},0)}var d=this;this.writable=!1;for(var e=a.length,f=0,h=e;f<h;f++)!function(a){g.encodePacket(a,d.supportsBinary,function(f){if(!d.usingBrowserWebSocket){var g={};if(a.options&&(g.compress=a.options.compress),d.perMessageDeflate){var h="string"==typeof f?b.Buffer.byteLength(f):f.length;h<d.perMessageDeflate.threshold&&(g.compress=!1)}}try{d.usingBrowserWebSocket?d.ws.send(f):d.ws.send(f,g)}catch(i){k("websocket closed before onclose event")}--e||c()})}(a[f])},d.prototype.onClose=function(){f.prototype.onClose.call(this)},d.prototype.doClose=function(){"undefined"!=typeof this.ws&&this.ws.close()},d.prototype.uri=function(){var a=this.query||{},b=this.secure?"wss":"ws",c="";this.port&&("wss"===b&&443!==Number(this.port)||"ws"===b&&80!==Number(this.port))&&(c=":"+this.port),this.timestampRequests&&(a[this.timestampParam]=j()),this.supportsBinary||(a.b64=1),a=h.encode(a),a.length&&(a="?"+a);var d=this.hostname.indexOf(":")!==-1;return b+"://"+(d?"["+this.hostname+"]":this.hostname)+c+this.path+a},d.prototype.check=function(){return!(!n||"__initialize"in n&&this.name===d.prototype.name)}}).call(b,function(){return this}())},function(a,b){},function(a,b){var c=[].indexOf;a.exports=function(a,b){if(c)return a.indexOf(b);for(var d=0;d<a.length;++d)if(a[d]===b)return d;return-1}},function(a,b){(function(b){var c=/^[\],:{}\s]*$/,d=/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,e=/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,f=/(?:^|:|,)(?:\s*\[)+/g,g=/^\s+/,h=/\s+$/;a.exports=function(a){return"string"==typeof a&&a?(a=a.replace(g,"").replace(h,""),b.JSON&&JSON.parse?JSON.parse(a):c.test(a.replace(d,"@").replace(e,"]").replace(f,""))?new Function("return "+a)():void 0):null}}).call(b,function(){return this}())},function(a,b,c){"use strict";function d(a,b,c){this.io=a,this.nsp=b,this.json=this,this.ids=0,this.acks={},this.receiveBuffer=[],this.sendBuffer=[],this.connected=!1,this.disconnected=!0,c&&c.query&&(this.query=c.query),this.io.autoConnect&&this.open()}var e="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(a){return typeof a}:function(a){return a&&"function"==typeof Symbol&&a.constructor===Symbol&&a!==Symbol.prototype?"symbol":typeof a},f=c(7),g=c(8),h=c(40),i=c(41),j=c(42),k=c(3)("socket.io-client:socket"),l=c(31);a.exports=b=d;var m={connect:1,connect_error:1,connect_timeout:1,connecting:1,disconnect:1,error:1,reconnect:1,reconnect_attempt:1,reconnect_failed:1,reconnect_error:1,reconnecting:1,ping:1,pong:1},n=g.prototype.emit;g(d.prototype),d.prototype.subEvents=function(){if(!this.subs){var a=this.io;this.subs=[i(a,"open",j(this,"onopen")),i(a,"packet",j(this,"onpacket")),i(a,"close",j(this,"onclose"))]}},d.prototype.open=d.prototype.connect=function(){return this.connected?this:(this.subEvents(),this.io.open(),"open"===this.io.readyState&&this.onopen(),this.emit("connecting"),this)},d.prototype.send=function(){var a=h(arguments);return a.unshift("message"),this.emit.apply(this,a),this},d.prototype.emit=function(a){if(m.hasOwnProperty(a))return n.apply(this,arguments),this;var b=h(arguments),c={type:f.EVENT,data:b};return c.options={},c.options.compress=!this.flags||!1!==this.flags.compress,"function"==typeof b[b.length-1]&&(k("emitting packet with ack id %d",this.ids),this.acks[this.ids]=b.pop(),c.id=this.ids++),this.connected?this.packet(c):this.sendBuffer.push(c),delete this.flags,this},d.prototype.packet=function(a){a.nsp=this.nsp,this.io.packet(a)},d.prototype.onopen=function(){if(k("transport is open - connecting"),"/"!==this.nsp)if(this.query){var a="object"===e(this.query)?l.encode(this.query):this.query;k("sending connect packet with query %s",a),this.packet({type:f.CONNECT,query:a})}else this.packet({type:f.CONNECT})},d.prototype.onclose=function(a){k("close (%s)",a),this.connected=!1,this.disconnected=!0,delete this.id,this.emit("disconnect",a)},d.prototype.onpacket=function(a){if(a.nsp===this.nsp)switch(a.type){case f.CONNECT:this.onconnect();break;case f.EVENT:this.onevent(a);break;case f.BINARY_EVENT:this.onevent(a);break;case f.ACK:this.onack(a);break;case f.BINARY_ACK:this.onack(a);break;case f.DISCONNECT:this.ondisconnect();break;case f.ERROR:this.emit("error",a.data)}},d.prototype.onevent=function(a){var b=a.data||[];k("emitting event %j",b),null!=a.id&&(k("attaching ack callback to event"),b.push(this.ack(a.id))),this.connected?n.apply(this,b):this.receiveBuffer.push(b)},d.prototype.ack=function(a){var b=this,c=!1;return function(){if(!c){c=!0;var d=h(arguments);k("sending ack %j",d),b.packet({type:f.ACK,id:a,data:d})}}},d.prototype.onack=function(a){var b=this.acks[a.id];"function"==typeof b?(k("calling ack %s with %j",a.id,a.data),b.apply(this,a.data),delete this.acks[a.id]):k("bad ack %s",a.id)},d.prototype.onconnect=function(){this.connected=!0,this.disconnected=!1,this.emit("connect"),this.emitBuffered()},d.prototype.emitBuffered=function(){var a;for(a=0;a<this.receiveBuffer.length;a++)n.apply(this,this.receiveBuffer[a]);for(this.receiveBuffer=[],a=0;a<this.sendBuffer.length;a++)this.packet(this.sendBuffer[a]);this.sendBuffer=[]},d.prototype.ondisconnect=function(){k("server disconnect (%s)",this.nsp),this.destroy(),this.onclose("io server disconnect")},d.prototype.destroy=function(){if(this.subs){for(var a=0;a<this.subs.length;a++)this.subs[a].destroy();this.subs=null}this.io.destroy(this)},d.prototype.close=d.prototype.disconnect=function(){return this.connected&&(k("performing disconnect (%s)",this.nsp),this.packet({type:f.DISCONNECT})),this.destroy(),this.connected&&this.onclose("io client disconnect"),this},d.prototype.compress=function(a){return this.flags=this.flags||{},this.flags.compress=a,this}},function(a,b){function c(a,b){var c=[];b=b||0;for(var d=b||0;d<a.length;d++)c[d-b]=a[d];return c}a.exports=c},function(a,b){"use strict";function c(a,b,c){return a.on(b,c),{destroy:function(){a.removeListener(b,c)}}}a.exports=c},function(a,b){var c=[].slice;a.exports=function(a,b){if("string"==typeof b&&(b=a[b]),"function"!=typeof b)throw new Error("bind() requires a function");var d=c.call(arguments,2);return function(){return b.apply(a,d.concat(c.call(arguments)))}}},function(a,b){function c(a){a=a||{},this.ms=a.min||100,this.max=a.max||1e4,this.factor=a.factor||2,this.jitter=a.jitter>0&&a.jitter<=1?a.jitter:0,this.attempts=0}a.exports=c,c.prototype.duration=function(){var a=this.ms*Math.pow(this.factor,this.attempts++);if(this.jitter){var b=Math.random(),c=Math.floor(b*this.jitter*a);a=0==(1&Math.floor(10*b))?a-c:a+c}return 0|Math.min(a,this.max)},c.prototype.reset=function(){this.attempts=0},c.prototype.setMin=function(a){this.ms=a},c.prototype.setMax=function(a){this.max=a},c.prototype.setJitter=function(a){this.jitter=a}}])});;
+
+//////////////////////////////////////////////////////////////////////////////////////
+ //                                                                                //
+ //  ███████╗ █████╗ ██╗██╗     ███████╗   ██╗ ██████╗         ██╗███████╗         //
+ //  ██╔════╝██╔══██╗██║██║     ██╔════╝   ██║██╔═══██╗        ██║██╔════╝         //
+ //  ███████╗███████║██║██║     ███████╗   ██║██║   ██║        ██║███████╗         //
+ //  ╚════██║██╔══██║██║██║     ╚════██║   ██║██║   ██║   ██   ██║╚════██║         //
+ //  ███████║██║  ██║██║███████╗███████║██╗██║╚██████╔╝██╗╚█████╔╝███████║         //
+ //  ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚═╝╚═╝ ╚═════╝ ╚═╝ ╚════╝ ╚══════╝         //
+ //                                                                                //
+ //   ╦╔═╗╦  ╦╔═╗╔═╗╔═╗╦═╗╦╔═╗╔╦╗  ╔═╗╦  ╦╔═╗╔╗╔╔╦╗  ╔═╗╔╦╗╦╔═                     //
+ //   ║╠═╣╚╗╔╝╠═╣╚═╗║  ╠╦╝║╠═╝ ║   ║  ║  ║║╣ ║║║ ║   ╚═╗ ║║╠╩╗                     //
+ //  ╚╝╩ ╩ ╚╝ ╩ ╩╚═╝╚═╝╩╚═╩╩   ╩   ╚═╝╩═╝╩╚═╝╝╚╝ ╩   ╚═╝═╩╝╩ ╩                     //
+ //  ┌─┐┌─┐┬─┐  ┌┐┌┌─┐┌┬┐┌─┐  ┬┌─┐  ┌─┐┌┐┌┌┬┐  ┌┬┐┬ ┬┌─┐  ┌┐ ┬─┐┌─┐┬ ┬┌─┐┌─┐┬─┐    //
+ //  ├┤ │ │├┬┘  ││││ │ ││├┤   │└─┐  ├─┤│││ ││   │ ├─┤├┤   ├┴┐├┬┘│ ││││└─┐├┤ ├┬┘    //
+ //  └  └─┘┴└─  ┘└┘└─┘─┴┘└─┘o└┘└─┘  ┴ ┴┘└┘─┴┘   ┴ ┴ ┴└─┘  └─┘┴└─└─┘└┴┘└─┘└─┘┴└─    //
+ //                                                                                //
+//////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * sails.io.js
+ * v1.2.1
  * ------------------------------------------------------------------------
  * JavaScript Client (SDK) for communicating with Sails.
  *
@@ -10,7 +44,7 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
  * using WebSockets from the browser to talk to your Sails server.
  *
  * For tips and documentation, visit:
- * http://sailsjs.org/#!documentation/reference/BrowserSDK/BrowserSDK.html
+ * http://sailsjs.com/documentation/reference/web-sockets/socket-client
  * ------------------------------------------------------------------------
  *
  * This file allows you to send and receive socket.io messages to & from Sails
@@ -27,137 +61,344 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
 
 (function() {
 
-  // Save the URL that this script was fetched from for use below.
-  // (skip this if this SDK is being used outside of the DOM, i.e. in a Node process)
-  var urlThisScriptWasFetchedFrom = (function() {
-    if (
-      typeof window !== 'object' ||
-      typeof window.document !== 'object' ||
-      typeof window.document.getElementsByTagName !== 'function'
-    ) {
-      return '';
-    }
 
-    // Return the URL of the last script loaded (i.e. this one)
-    // (this must run before nextTick; see http://stackoverflow.com/a/2976714/486547)
-    var allScriptsCurrentlyInDOM = window.document.getElementsByTagName('script');
-    var thisScript = allScriptsCurrentlyInDOM[allScriptsCurrentlyInDOM.length - 1];
-    return thisScript.src;
-  })();
+  //   ██████╗ ██████╗ ███╗   ██╗███████╗████████╗ █████╗ ███╗   ██╗████████╗███████╗
+  //  ██╔════╝██╔═══██╗████╗  ██║██╔════╝╚══██╔══╝██╔══██╗████╗  ██║╚══██╔══╝██╔════╝
+  //  ██║     ██║   ██║██╔██╗ ██║███████╗   ██║   ███████║██╔██╗ ██║   ██║   ███████╗
+  //  ██║     ██║   ██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║╚██╗██║   ██║   ╚════██║
+  //  ╚██████╗╚██████╔╝██║ ╚████║███████║   ██║   ██║  ██║██║ ╚████║   ██║   ███████║
+  //   ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝
+  //
 
-  // Constants
+
+  /**
+   * Constant containing the names of all available options
+   * for individual sockets.
+   *
+   * @type {Array}
+   */
+  var SOCKET_OPTIONS = [
+    'useCORSRouteToGetCookie',
+    'url',
+    'multiplex',
+    'transports',
+    'query',
+    'path',
+    'headers',
+    'initialConnectionHeaders',
+    'reconnection',
+    'reconnectionAttempts',
+    'reconnectionDelay',
+    'reconnectionDelayMax',
+    'rejectUnauthorized',
+    'randomizationFactor',
+    'timeout'
+  ];
+
+
+  /**
+   * Constant containing the names of properties on `io.sails` which
+   * may be configured using HTML attributes on the script tag which
+   * loaded this file.
+   *
+   * @type {Array}
+   *
+   * (this is unused if loading from node.js)
+   */
+  var CONFIGURABLE_VIA_HTML_ATTR = [
+    'autoConnect',
+    'reconnection',
+    'environment',
+    'headers',
+    'url',
+    'transports',
+    'path'
+  ];
+
+
+
+
+  /**
+   * Constant containing the names of querystring
+   * parameters sent when connecting any SailsSocket.
+   *
+   * @type {Dictionary}
+   */
   var CONNECTION_METADATA_PARAMS = {
     version: '__sails_io_sdk_version',
     platform: '__sails_io_sdk_platform',
     language: '__sails_io_sdk_language'
   };
 
-  // Current version of this SDK (sailsDK?!?!) and other metadata
-  // that will be sent along w/ the initial connection request.
+
+  /**
+   * Constant containing metadata about the platform, language, and
+   * current version of this SDK.
+   *
+   * @type {Dictionary}
+   */
   var SDK_INFO = {
-    version: '0.10.0', // TODO: pull this automatically from package.json during build.
-    platform: typeof module === 'undefined' ? 'browser' : 'node',
-    language: 'javascript'
+    version: '1.2.1', // <-- pulled automatically from package.json, do not change!
+    language: 'javascript',
+    platform: (function (){
+      if (typeof module === 'object' && typeof module.exports !== 'undefined') {
+        return 'node';
+      }
+      else {
+        return 'browser';
+      }
+    })()
   };
+
+  // Build `versionString` (a querystring snippet) by
+  // combining SDK_INFO and CONNECTION_METADATA_PARAMS.
   SDK_INFO.versionString =
     CONNECTION_METADATA_PARAMS.version + '=' + SDK_INFO.version + '&' +
     CONNECTION_METADATA_PARAMS.platform + '=' + SDK_INFO.platform + '&' +
     CONNECTION_METADATA_PARAMS.language + '=' + SDK_INFO.language;
 
 
-  // In case you're wrapping the socket.io client to prevent pollution of the
-  // global namespace, you can pass in your own `io` to replace the global one.
-  // But we still grab access to the global one if it's available here:
-  var _io = (typeof io !== 'undefined') ? io : null;
-
-  /**
-   * Augment the `io` object passed in with methods for talking and listening
-   * to one or more Sails backend(s).  Automatically connects a socket and
-   * exposes it on `io.socket`.  If a socket tries to make requests before it
-   * is connected, the sails.io.js client will queue it up.
-   *
-   * @param {SocketIO} io
-   */
-
-  function SailsIOClient(io) {
-
-    // Prefer the passed-in `io` instance, but also use the global one if we've got it.
-    io = io || _io;
-
-    // If the socket.io client is not available, none of this will work.
-    if (!io) throw new Error('`sails.io.js` requires a socket.io client, but `io` was not passed in.');
 
 
-
-    //////////////////////////////////////////////////////////////
-    /////                              ///////////////////////////
-    ///// PRIVATE METHODS/CONSTRUCTORS ///////////////////////////
-    /////                              ///////////////////////////
-    //////////////////////////////////////////////////////////////
-
-    /**
-     * TmpSocket
-     *
-     * A mock Socket used for binding events before the real thing
-     * has been instantiated (since we need to use io.connect() to
-     * instantiate the real thing, which would kick off the connection
-     * process w/ the server, and we don't necessarily have the valid
-     * configuration to know WHICH SERVER to talk to yet.)
-     *
-     * @api private
-     * @constructor
-     */
-
-    function TmpSocket() {
-      var boundEvents = {};
-      this.on = function (evName, fn) {
-        if (!boundEvents[evName]) boundEvents[evName] = [fn];
-        else boundEvents[evName].push(fn);
-        return this;
-      };
-      this.become = function(actualSocket) {
-
-        // Pass events and a reference to the request queue
-        // off to the actualSocket for consumption
-        for (var evName in boundEvents) {
-          for (var i in boundEvents[evName]) {
-            actualSocket.on(evName, boundEvents[evName][i]);
-          }
-        }
-        actualSocket.requestQueue = this.requestQueue;
-
-        // Bind a one-time function to run the request queue
-        // when the actualSocket connects.
-        if (!_isConnected(actualSocket)) {
-          var alreadyRanRequestQueue = false;
-          actualSocket.on('connect', function onActualSocketConnect() {
-            if (alreadyRanRequestQueue) return;
-            runRequestQueue(actualSocket);
-            alreadyRanRequestQueue = true;
-          });
-        }
-        // Or run it immediately if actualSocket is already connected
-        else {
-          runRequestQueue(actualSocket);
-        }
-
-        return actualSocket;
-      };
-
-      // Uses `this` instead of `TmpSocket.prototype` purely
-      // for convenience, since it makes more sense to attach
-      // our extra methods to the `Socket` prototype down below.
-      // This could be optimized by moving those Socket method defs
-      // to the top of this SDK file instead of the bottom.  Will
-      // gladly do it if it is an issue for anyone.
-      this.get = Socket.prototype.get;
-      this.post = Socket.prototype.post;
-      this.put = Socket.prototype.put;
-      this['delete'] = Socket.prototype['delete'];
-      this.request = Socket.prototype.request;
-      this._request = Socket.prototype._request;
+  //   █████╗ ██████╗ ███████╗ ██████╗ ██████╗ ██████╗     ██╗  ██╗████████╗███╗   ███╗██╗
+  //  ██╔══██╗██╔══██╗██╔════╝██╔═══██╗██╔══██╗██╔══██╗    ██║  ██║╚══██╔══╝████╗ ████║██║
+  //  ███████║██████╔╝███████╗██║   ██║██████╔╝██████╔╝    ███████║   ██║   ██╔████╔██║██║
+  //  ██╔══██║██╔══██╗╚════██║██║   ██║██╔══██╗██╔══██╗    ██╔══██║   ██║   ██║╚██╔╝██║██║
+  //  ██║  ██║██████╔╝███████║╚██████╔╝██║  ██║██████╔╝    ██║  ██║   ██║   ██║ ╚═╝ ██║███████╗
+  //  ╚═╝  ╚═╝╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝     ╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚═╝╚══════╝
+  //
+  //   █████╗ ████████╗████████╗██████╗ ██╗██████╗ ██╗   ██╗████████╗███████╗███████╗
+  //  ██╔══██╗╚══██╔══╝╚══██╔══╝██╔══██╗██║██╔══██╗██║   ██║╚══██╔══╝██╔════╝██╔════╝
+  //  ███████║   ██║      ██║   ██████╔╝██║██████╔╝██║   ██║   ██║   █████╗  ███████╗
+  //  ██╔══██║   ██║      ██║   ██╔══██╗██║██╔══██╗██║   ██║   ██║   ██╔══╝  ╚════██║
+  //  ██║  ██║   ██║      ██║   ██║  ██║██║██████╔╝╚██████╔╝   ██║   ███████╗███████║
+  //  ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝  ╚═╝╚═╝╚═════╝  ╚═════╝    ╚═╝   ╚══════╝╚══════╝
+  //
+  //  ███████╗██████╗  ██████╗ ███╗   ███╗      ██╗███████╗ ██████╗██████╗ ██╗██████╗ ████████╗██╗
+  //  ██╔════╝██╔══██╗██╔═══██╗████╗ ████║     ██╔╝██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝╚██╗
+  //  █████╗  ██████╔╝██║   ██║██╔████╔██║    ██╔╝ ███████╗██║     ██████╔╝██║██████╔╝   ██║    ╚██╗
+  //  ██╔══╝  ██╔══██╗██║   ██║██║╚██╔╝██║    ╚██╗ ╚════██║██║     ██╔══██╗██║██╔═══╝    ██║    ██╔╝
+  //  ██║     ██║  ██║╚██████╔╝██║ ╚═╝ ██║     ╚██╗███████║╚██████╗██║  ██║██║██║        ██║   ██╔╝
+  //  ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝      ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚═╝
+  //
+  //
+  // If available, grab the DOM element for the script tag which imported this file.
+  // (skip this if this SDK is being used outside of the DOM, i.e. in a Node process)
+  //
+  // This is used below to parse client-side sails.io.js configuration encoded as
+  // HTML attributes, as well as grabbing hold of the URL from whence the SDK was fetched.
+  var thisScriptTag = (function() {
+    if (
+      typeof window !== 'object' ||
+      typeof window.document !== 'object' ||
+      typeof window.document.getElementsByTagName !== 'function'
+    ) {
+      return null;
     }
 
+    // Return the URL of the last script loaded (i.e. this one)
+    // (this must run before nextTick; see http://stackoverflow.com/a/2976714/486547)
+    var allScriptsCurrentlyInDOM = window.document.getElementsByTagName('script');
+    return allScriptsCurrentlyInDOM[allScriptsCurrentlyInDOM.length - 1];
+  })();
+
+
+  // Variables to contain src URL and other script tag config (for use below).
+  var urlThisScriptWasFetchedFrom = '';
+  var scriptTagConfig = {};
+
+
+  if (thisScriptTag) {
+    // Save the URL that this script was fetched from.
+    urlThisScriptWasFetchedFrom = thisScriptTag.src;
+
+    // Now parse the most common client-side configuration settings
+    // from the script tag where they may be encoded as HTML attributes.
+    //
+    // Any configuration which may be provided as an HTML attribute may
+    // also be provided prefixed with `data-`.  This is for folks who
+    // need to support browsers that have issues with nonstandard
+    // HTML attributes (or if the idea of using nonstandard HTML attributes
+    // just creeps you out)
+    //
+    // If a `data-` prefixed attr is provided, it takes precedence.
+    // (this is so that if you are already using one of these HTML
+    //  attrs for some reason, you can keep it as-is and override
+    //  it using `data-`. If you are using the `data-` prefixed version
+    //  for some other purpose... well, in that case you'll just have to
+    //  configure programmatically using `io.sails` instead.)
+    CONFIGURABLE_VIA_HTML_ATTR.forEach(function (configKey){
+
+      scriptTagConfig[configKey] = (function (){
+
+        // Support 'data-' prefixed or normal attributes.
+        // (prefixed versions take precedence if provided)
+        var htmlAttrVal = thisScriptTag.getAttribute( 'data-'+configKey );
+        if (!htmlAttrVal) {
+          htmlAttrVal = thisScriptTag.getAttribute( configKey );
+        }
+
+        // The HTML attribute value should always be a string or `null`.
+        // We'll try to parse it as JSON and use that, but worst case fall back
+        // to the default situation of it being a string.
+        if (typeof htmlAttrVal === 'string') {
+          try { return JSON.parse(htmlAttrVal); } catch (e) { return htmlAttrVal; }
+        }
+        // If `null` was returned from getAttribute(), it means that the HTML attribute
+        // was not specified, so we treat it as undefined (which will cause the property
+        // to be removed below)
+        else if (htmlAttrVal === null) {
+          return undefined;
+        }
+        // Any other contingency shouldn't be possible:
+        // - if no quotes are used in the HTML attribute, it still comes in as a string.
+        // - if no RHS is provided for the attribute, it still comes in as "" (empty string)
+        // (but we still handle this with an explicit error just in case--for debugging and support purposes)
+        else throw new Error('sails.io.js :: Unexpected/invalid script tag configuration for `'+configKey+'`: `'+htmlAttrVal+'` (a `'+typeof htmlAttrVal+'`). Should be a string.');
+      })();
+
+      if (scriptTagConfig[configKey] === undefined){
+        delete scriptTagConfig[configKey];
+      }
+    });
+
+
+
+    // Now that they've been parsed, do an extremely lean version of
+    // logical type validation/coercion of provided values.
+    //////////////////////////////////////////////////////////////////
+
+    // `autoConnect`
+    if (typeof scriptTagConfig.autoConnect !== 'undefined') {
+      if (scriptTagConfig.autoConnect === '') {
+        // Special case for empty string.  It means `true` (see above).
+        scriptTagConfig.autoConnect = true;
+      }
+      else if (typeof scriptTagConfig.autoConnect !== 'boolean') {
+        throw new Error('sails.io.js :: Unexpected/invalid configuration for `autoConnect` provided in script tag: `'+scriptTagConfig.autoConnect+'` (a `'+typeof scriptTagConfig.autoConnect+'`). Should be a boolean.');
+      }
+    }
+
+
+    // `environment`
+    if (typeof scriptTagConfig.environment !== 'undefined') {
+      if (typeof scriptTagConfig.environment !== 'string') {
+        throw new Error('sails.io.js :: Unexpected/invalid configuration for `environment` provided in script tag: `'+scriptTagConfig.environment+'` (a `'+typeof scriptTagConfig.environment+'`). Should be a string.');
+      }
+    }
+
+
+    // `headers`
+    if (typeof scriptTagConfig.headers !== 'undefined') {
+      if (typeof scriptTagConfig.headers !== 'object' || Array.isArray(scriptTagConfig.headers)) {
+        throw new Error('sails.io.js :: Unexpected/invalid configuration for `headers` provided in script tag: `'+scriptTagConfig.headers+'` (a `'+typeof scriptTagConfig.headers+'`). Should be a JSON-compatible dictionary (i.e. `{}`).  Don\'t forget those double quotes (""), even on key names!  Use single quotes (\'\') to wrap the HTML attribute value; e.g. `headers=\'{"X-Auth": "foo"}\'`');
+      }
+    }
+
+
+    // `url`
+    if (typeof scriptTagConfig.url !== 'undefined') {
+      if (typeof scriptTagConfig.url !== 'string') {
+        throw new Error('sails.io.js :: Unexpected/invalid configuration for `url` provided in script tag: `'+scriptTagConfig.url+'` (a `'+typeof scriptTagConfig.url+'`). Should be a string.');
+      }
+    }
+
+    // OTHER `io.sails` options are NOT CURRENTLY SUPPORTED VIA HTML ATTRIBUTES.
+  }
+
+
+
+
+  // Grab a reference to the global socket.io client (if one is available).
+  // This is used via closure below to determine which `io` to use when the
+  // socket.io client instance (`io`) is augmented to become the Sails client
+  // SDK instance (still `io`).
+  var _existingGlobalSocketIO = (typeof io !== 'undefined') ? io : undefined;
+
+
+
+
+  //////////////////////////////////////////////////////////////
+  /////
+  ///// NOW FOR BUNCHES OF:
+  /////  - PRIVATE FUNCTION DEFINITIONS
+  /////  - CONSTRUCTORS
+  /////  - AND METHODS
+  /////
+  //////////////////////////////////////////////////////////////
+  //
+
+
+
+  //  ███████╗ █████╗ ██╗██╗     ███████╗      ██╗ ██████╗        ██████╗██╗     ██╗███████╗███╗   ██╗████████╗
+  //  ██╔════╝██╔══██╗██║██║     ██╔════╝      ██║██╔═══██╗      ██╔════╝██║     ██║██╔════╝████╗  ██║╚══██╔══╝
+  //  ███████╗███████║██║██║     ███████╗█████╗██║██║   ██║█████╗██║     ██║     ██║█████╗  ██╔██╗ ██║   ██║
+  //  ╚════██║██╔══██║██║██║     ╚════██║╚════╝██║██║   ██║╚════╝██║     ██║     ██║██╔══╝  ██║╚██╗██║   ██║
+  //  ███████║██║  ██║██║███████╗███████║      ██║╚██████╔╝      ╚██████╗███████╗██║███████╗██║ ╚████║   ██║
+  //  ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝      ╚═╝ ╚═════╝        ╚═════╝╚══════╝╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝
+  //
+
+  /**
+   * SailsIOClient()
+   *
+   * Augment the provided Socket.io client object (`io`) with methods for
+   * talking and listening to one or more Sails backend(s).  If no `io` was
+   * provided (i.e. in a browser setting), then attempt to use the global.
+   *
+   * This absorbs implicit `io.sails` configuration, sets a timer for
+   * automatically connecting a socket (if `io.sails.autoConnect` is enabled)
+   * and returns the augmented `io`.
+   *
+   * Note:
+   * The automatically-connected socket is exposed as `io.socket`.  If this
+   * socket attempts to bind event listeners or send requests before it is
+   * connected, it will be queued up and replayed when the connection is
+   * successfully opened.
+   *
+   * @param {SocketIO} io
+   * @returns {SailsIOClient} [also called `io`]
+   */
+
+  function SailsIOClient(_providedSocketIO) {
+
+    // First, determine which `io` we're augmenting.
+    //
+    // Prefer the passed-in `io` instance, but fall back to the
+    // global one if we've got it.
+    var io;
+    if (_providedSocketIO) {
+      io = _providedSocketIO;
+    }
+    else {
+      io = _existingGlobalSocketIO;
+    }
+    // (note that for readability, we deliberately do not short circuit or use the tertiary operator above)
+
+
+    // If a socket.io client (`io`) is not available, none of this will work.
+    if (!io) {
+      // If node:
+      if (SDK_INFO.platform === 'node') {
+        throw new Error('No socket.io client available.  When requiring `sails.io.js` from Node.js, a socket.io client (`io`) must be passed in; e.g.:\n```\nvar io = require(\'sails.io.js\')( require(\'socket.io-client\') )\n```\n(see https://github.com/balderdashy/sails.io.js/tree/master/test for more examples)');
+      }
+      // Otherwise, this is a web browser:
+      else {
+        throw new Error('The Sails socket SDK depends on the socket.io client, but the socket.io global (`io`) was not available when `sails.io.js` loaded.  Normally, the socket.io client code is bundled with sails.io.js, so something is a little off.  Please check to be sure this version of `sails.io.js` has the minified Socket.io client at the top of the file.');
+      }
+    }
+
+    // If the chosen socket.io client (`io`) has ALREADY BEEN AUGMENTED by this SDK,
+    // (i.e. if it already has a `.sails` property) then throw an error.
+    if (io.sails) {
+      // If node:
+      if (SDK_INFO.platform === 'node') {
+        throw new Error('The provided socket.io client (`io`) has already been augmented into a Sails socket SDK instance (it has `io.sails`).');
+      }
+      // Otherwise, this is a web browser:
+      else {
+        throw new Error('The socket.io client (`io`) has already been augmented into a Sails socket SDK instance.  Usually, this means you are bringing `sails.io.js` onto the page more than once.');
+      }
+    }
 
 
     /**
@@ -199,7 +440,7 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
           .bind(console)
           .apply(this, args);
       };
-    }
+    }//</LoggerFactory>
 
     // Create a private logger instance
     var consolog = LoggerFactory();
@@ -210,29 +451,14 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
 
 
     /**
-     * _isConnected
-     *
-     * @api private
-     * @param  {Socket}  socket
-     * @return {Boolean} whether the socket is connected and able to
-     *                           communicate w/ the server.
-     */
-
-    function _isConnected(socket) {
-      return socket.socket && socket.socket.connected;
-    }
-
-
-
-    /**
      * What is the `requestQueue`?
-     * 
+     *
      * The request queue is used to simplify app-level connection logic--
      * i.e. so you don't have to wait for the socket to be connected
      * to start trying to  synchronize data.
-     * 
+     *
      * @api private
-     * @param  {Socket}  socket
+     * @param  {SailsSocket}  socket
      */
 
     function runRequestQueue (socket) {
@@ -247,67 +473,104 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
         // (e.g. Ember does this. See https://github.com/balderdashy/sails.io.js/pull/5)
         var isSafeToDereference = ({}).hasOwnProperty.call(queue, i);
         if (isSafeToDereference) {
-          // Emit the request.
-          _emitFrom(socket, queue[i]);
+          // Get the arguments that were originally made to the "request" method
+          var requestArgs = queue[i];
+          // Call the request method again in the context of the socket, with the original args
+          socket.request.apply(socket, requestArgs);
         }
       }
+
+      // Now empty the queue to remove it as a source of additional complexity.
+      socket.requestQueue = null;
     }
 
 
 
     /**
-     * Send an AJAX request.
-     * 
+     * Send a JSONP request.
+     *
      * @param  {Object}   opts [optional]
      * @param  {Function} cb
      * @return {XMLHttpRequest}
      */
 
-    function ajax(opts, cb) {
+    function jsonp(opts, cb) {
       opts = opts || {};
-      var xmlhttp;
 
       if (typeof window === 'undefined') {
-        // TODO: refactor node usage to live in here
+        // FUTURE: refactor node usage to live in here
         return cb();
       }
 
-      if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp = new XMLHttpRequest();
-      } else {
-        // code for IE6, IE5
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-
-      xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-          cb(xmlhttp.responseText);
+      var scriptEl = document.createElement('script');
+      window._sailsIoJSConnect = function(response) {
+        // In rare circumstances our script may have been vaporised.
+        // Remove it, but only if it still exists
+        // https://github.com/balderdashy/sails.io.js/issues/92
+        if (scriptEl && scriptEl.parentNode) {
+            scriptEl.parentNode.removeChild(scriptEl);
         }
-      };
 
-      xmlhttp.open(opts.method, opts.url, true);
-      xmlhttp.send();
-      return xmlhttp;
+        cb(response);
+      };
+      scriptEl.src = opts.url;
+      document.getElementsByTagName('head')[0].appendChild(scriptEl);
+
     }
 
 
 
+
+    //       ██╗███████╗ ██████╗ ███╗   ██╗      ██╗    ██╗███████╗██████╗ ███████╗ ██████╗  ██████╗██╗  ██╗███████╗████████╗
+    //       ██║██╔════╝██╔═══██╗████╗  ██║      ██║    ██║██╔════╝██╔══██╗██╔════╝██╔═══██╗██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝
+    //       ██║███████╗██║   ██║██╔██╗ ██║█████╗██║ █╗ ██║█████╗  ██████╔╝███████╗██║   ██║██║     █████╔╝ █████╗     ██║
+    //  ██   ██║╚════██║██║   ██║██║╚██╗██║╚════╝██║███╗██║██╔══╝  ██╔══██╗╚════██║██║   ██║██║     ██╔═██╗ ██╔══╝     ██║
+    //  ╚█████╔╝███████║╚██████╔╝██║ ╚████║      ╚███╔███╔╝███████╗██████╔╝███████║╚██████╔╝╚██████╗██║  ██╗███████╗   ██║
+    //   ╚════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝       ╚══╝╚══╝ ╚══════╝╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝
+    //
+    //  ██████╗ ███████╗███████╗██████╗  ██████╗ ███╗   ██╗███████╗███████╗     ██╗     ██╗██╗    ██╗██████╗ ██╗
+    //  ██╔══██╗██╔════╝██╔════╝██╔══██╗██╔═══██╗████╗  ██║██╔════╝██╔════╝    ██╔╝     ██║██║    ██║██╔══██╗╚██╗
+    //  ██████╔╝█████╗  ███████╗██████╔╝██║   ██║██╔██╗ ██║███████╗█████╗      ██║      ██║██║ █╗ ██║██████╔╝ ██║
+    //  ██╔══██╗██╔══╝  ╚════██║██╔═══╝ ██║   ██║██║╚██╗██║╚════██║██╔══╝      ██║ ██   ██║██║███╗██║██╔══██╗ ██║
+    //  ██║  ██║███████╗███████║██║     ╚██████╔╝██║ ╚████║███████║███████╗    ╚██╗╚█████╔╝╚███╔███╔╝██║  ██║██╔╝
+    //  ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝      ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚══════╝     ╚═╝ ╚════╝  ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝
+    //
+
     /**
      * The JWR (JSON WebSocket Response) received from a Sails server.
      *
-     * @api private
+     * @api public
      * @param  {Object}  responseCtx
      *         => :body
      *         => :statusCode
      *         => :headers
+     *
      * @constructor
      */
 
     function JWR(responseCtx) {
-      this.body = responseCtx.body || {};
+      this.body = responseCtx.body;
       this.headers = responseCtx.headers || {};
-      this.statusCode = responseCtx.statusCode || 200;
+      this.statusCode = (typeof responseCtx.statusCode === 'undefined') ? 200 : responseCtx.statusCode;
+      // FUTURE: Replace this typeof short-circuit with an assertion (statusCode should always be set)
+
+      if (this.statusCode < 200 || this.statusCode >= 400) {
+        // Determine the appropriate error message.
+        var msg;
+        if (this.statusCode === 0) {
+          msg = 'The socket request failed.';
+        }
+        else {
+          msg = 'Server responded with a ' + this.statusCode + ' status code';
+          msg += ':\n```\n' + JSON.stringify(this.body, null, 2) + '\n```';
+          // (^^Note that we should always be able to rely on socket.io to give us
+          // non-circular data here, so we don't have to worry about wrapping the
+          // above in a try...catch)
+        }
+
+        // Now build and attach Error instance.
+        this.error = new Error(msg);
+      }
     }
     JWR.prototype.toString = function() {
       return '[ResponseFromSails]' + '  -- ' +
@@ -323,58 +586,649 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
       };
     };
     JWR.prototype.pipe = function() {
-      // TODO: look at substack's stuff
-      return new Error('Not implemented yet.');
+      // FUTURE: look at substack's stuff
+      return new Error('Client-side streaming support not implemented yet.');
     };
 
 
+
+
+    //          ███████╗███╗   ███╗██╗████████╗███████╗██████╗  ██████╗ ███╗   ███╗ ██╗██╗
+    //          ██╔════╝████╗ ████║██║╚══██╔══╝██╔════╝██╔══██╗██╔═══██╗████╗ ████║██╔╝╚██╗
+    //          █████╗  ██╔████╔██║██║   ██║   █████╗  ██████╔╝██║   ██║██╔████╔██║██║  ██║
+    //          ██╔══╝  ██║╚██╔╝██║██║   ██║   ██╔══╝  ██╔══██╗██║   ██║██║╚██╔╝██║██║  ██║
+    //  ███████╗███████╗██║ ╚═╝ ██║██║   ██║   ██║     ██║  ██║╚██████╔╝██║ ╚═╝ ██║╚██╗██╔╝
+    //  ╚══════╝╚══════╝╚═╝     ╚═╝╚═╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝ ╚═╝╚═╝
+    //
+
     /**
      * @api private
-     * @param  {Socket} socket  [description]
+     * @param  {SailsSocket} socket  [description]
      * @param  {Object} requestCtx [description]
      */
 
     function _emitFrom(socket, requestCtx) {
+
+      if (!socket._raw) {
+        throw new Error('Failed to emit from socket- raw SIO socket is missing.');
+      }
 
       // Since callback is embedded in requestCtx,
       // retrieve it and delete the key before continuing.
       var cb = requestCtx.cb;
       delete requestCtx.cb;
 
-
-      // Name of socket request listener on the server
-      // ( === the request method, e.g. 'get', 'post', 'put', etc. )
+      // Name of the appropriate socket.io listener on the server
+      // ( === the request method or "verb", e.g. 'get', 'post', 'put', etc. )
       var sailsEndpoint = requestCtx.method;
-      socket.emit(sailsEndpoint, requestCtx, function serverResponded(responseCtx) {
 
-        // Adds backwards-compatibility for 0.9.x projects
-        // If `responseCtx.body` does not exist, the entire
-        // `responseCtx` object must actually be the `body`.
-        var body;
-        if (!responseCtx.body) {
-          body = responseCtx;
-        } else {
-          body = responseCtx.body;
-        }
+      socket._raw.emit(sailsEndpoint, requestCtx, function serverResponded(responseCtx) {
 
         // Send back (emulatedHTTPBody, jsonWebSocketResponse)
-        if (cb) {
-          cb(body, new JWR(responseCtx));
+        if (cb && !requestCtx.calledCb) {
+          cb(responseCtx.body, new JWR(responseCtx));
+          // Set flag indicating that callback was called, to avoid duplicate calls.
+          requestCtx.calledCb = true;
+          // Remove the callback from the list.
+          socket._responseCbs.splice(socket._responseCbs.indexOf(cb), 1);
+          // Remove the context from the list.
+          socket._requestCtxs.splice(socket._requestCtxs.indexOf(requestCtx), 1);
         }
       });
     }
 
-    //////////////////////////////////////////////////////////////
-    ///// </PRIVATE METHODS/CONSTRUCTORS> ////////////////////////
-    //////////////////////////////////////////////////////////////
 
 
 
-    // We'll be adding methods to `io.SocketNamespace.prototype`, the prototype for the 
-    // Socket instance returned when the browser connects with `io.connect()`
-    var Socket = io.SocketNamespace;
 
 
+
+    //  ███████╗ █████╗ ██╗██╗     ███████╗███████╗ ██████╗  ██████╗██╗  ██╗███████╗████████╗
+    //  ██╔════╝██╔══██╗██║██║     ██╔════╝██╔════╝██╔═══██╗██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝
+    //  ███████╗███████║██║██║     ███████╗███████╗██║   ██║██║     █████╔╝ █████╗     ██║
+    //  ╚════██║██╔══██║██║██║     ╚════██║╚════██║██║   ██║██║     ██╔═██╗ ██╔══╝     ██║
+    //  ███████║██║  ██║██║███████╗███████║███████║╚██████╔╝╚██████╗██║  ██╗███████╗   ██║
+    //  ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝
+    //
+
+    /**
+     * SailsSocket
+     *
+     * A wrapper for an underlying Socket instance that communicates directly
+     * to the Socket.io server running inside of Sails.
+     *
+     * If no `socket` option is provied, SailsSocket will function as a mock. It will queue socket
+     * requests and event handler bindings, replaying them when the raw underlying socket actually
+     * connects. This is handy when we don't necessarily have the valid configuration to know
+     * WHICH SERVER to talk to yet, etc.  It is also used by `io.socket` for your convenience.
+     *
+     * @constructor
+     * @api private
+     *
+     * ----------------------------------------------------------------------
+     * Note: This constructor should not be used directly. To obtain a `SailsSocket`
+     * instance of your very own, run:
+     * ```
+     * var mySocket = io.sails.connect();
+     * ```
+     * ----------------------------------------------------------------------
+     */
+    function SailsSocket (opts){
+      var self = this;
+      opts = opts||{};
+
+      // Initialize private properties
+      self._isConnecting = false;
+      self._mightBeAboutToAutoConnect = false;
+
+      // Set up connection options so that they can only be changed when socket is disconnected.
+      var _opts = {};
+      SOCKET_OPTIONS.forEach(function(option) {
+        // Okay to change global headers while socket is connected
+        if (option == 'headers') {return;}
+        Object.defineProperty(self, option, {
+          get: function() {
+            if (option == 'url') {
+              return _opts[option] || (self._raw && self._raw.io && self._raw.io.uri);
+            }
+            return _opts[option];
+          },
+          set: function(value) {
+            // Don't allow value to be changed while socket is connected
+            if (self.isConnected() && io.sails.strict !== false && value != _opts[option]) {
+              throw new Error('Cannot change value of `' + option + '` while socket is connected.');
+            }
+            // If socket is attempting to reconnect, stop it.
+            if (self._raw && self._raw.io && self._raw.io.reconnecting && !self._raw.io.skipReconnect) {
+              self._raw.io.skipReconnect = true;
+              consolog('Stopping reconnect; use .reconnect() to connect socket after changing options.');
+            }
+            _opts[option] = value;
+          }
+        });
+      });
+
+      // Absorb opts into SailsSocket instance
+      // See http://sailsjs.com/documentation/reference/web-sockets/socket-client/sails-socket/properties
+      // for description of options
+      SOCKET_OPTIONS.forEach(function(option) {
+        self[option] = opts[option];
+      });
+
+      // Set up "eventQueue" to hold event handlers which have not been set on the actual raw socket yet.
+      self.eventQueue = {};
+
+      // Listen for special `parseError` event sent from sockets hook on the backend
+      // if an error occurs but a valid callback was not received from the client
+      // (i.e. so the server had no other way to send back the error information)
+      self.on('sails:parseError', function (err){
+        consolog('Sails encountered an error parsing a socket message sent from this client, and did not have access to a callback function to respond with.');
+        consolog('Error details:',err);
+      });
+
+      // FUTURE:
+      // Listen for a special private message on any connected that allows the server
+      // to set the environment (giving us 100% certainty that we guessed right)
+      // However, note that the `console.log`s called before and after connection
+      // are still forced to rely on our existing heuristics (to disable, tack #production
+      // onto the URL used to fetch this file.)
+
+    }//</SailsSocket>
+
+
+    /**
+     * `SailsSocket.prototype._connect()`
+     *
+     * Begin connecting this socket to the server.
+     *
+     * @api private
+     */
+    SailsSocket.prototype._connect = function (){
+      var self = this;
+
+      self._isConnecting = true;
+
+      // Apply `io.sails` config as defaults
+      // (now that at least one tick has elapsed)
+      // See http://sailsjs.com/documentation/reference/web-sockets/socket-client/sails-socket/properties
+      // for description of options and default values
+      SOCKET_OPTIONS.forEach(function(option) {
+        if ('undefined' == typeof self[option]) {
+          self[option] = io.sails[option];
+        }
+      });
+
+      // Headers that will be sent with the initial request to /socket.io (Node.js only)
+      self.extraHeaders = self.initialConnectionHeaders || {};
+
+      // For browser usage (currently works with "polling" transport only)
+      self.transportOptions = self.transportOptions || {};
+      self.transports.forEach(function(transport) {
+        self.transportOptions[transport] = self.transportOptions[transport] || {};
+        self.transportOptions[transport].extraHeaders = self.initialConnectionHeaders || {};
+      });
+
+      // Log a warning if non-Node.js platform attempts to use `initialConnectionHeaders` for anything other than `polling`.
+      if (self.initialConnectionHeaders && SDK_INFO.platform !== 'node' && self.transports.indexOf('polling') === -1 || self.transports.length > 1) {
+        if (typeof console === 'object' && typeof console.warn === 'function') {
+          console.warn('When running in browser, `initialConnectionHeaders` option is only available for the `polling` transport.');
+        }
+      }
+
+      // Ensure URL has no trailing slash
+      self.url = self.url ? self.url.replace(/(\/)$/, '') : undefined;
+
+      // Mix the current SDK version into the query string in
+      // the connection request to the server:
+      if (typeof self.query === 'string') {
+        // (If provided as a string, trim leading question mark,
+        // just in case one was provided.)
+        self.query = self.query.replace(/^\?/, '');
+        self.query += '&' + SDK_INFO.versionString;
+      }
+      else if (self.query && typeof self.query === 'object') {
+        throw new Error('`query` setting does not currently support configuration as a dictionary (`{}`).  Instead, it must be specified as a string like `foo=89&bar=hi`');
+      }
+      else if (!self.query) {
+        self.query = SDK_INFO.versionString;
+      }
+      else {
+        throw new Error('Unexpected data type provided for `query` setting: '+self.query);
+      }
+
+      // Determine whether this is a cross-origin socket by examining the
+      // hostname and port on the `window.location` object.  If it's cross-origin,
+      // we'll attempt to get a cookie for the domain so that a Sails session can
+      // be established.
+      var isXOrigin = (function (){
+
+        // If `window` doesn't exist (i.e. being used from Node.js), then
+        // we won't bother attempting to get a cookie.  If you're using sockets
+        // from Node.js and find you need to share a session between multiple
+        // socket connections, you'll need to make an HTTP request to the /__getcookie
+        // endpoint of the Sails server (or any endpoint that returns a set-cookie header)
+        // and then use the cookie value in the `initialConnectionHeaders` option to
+        // io.sails.connect()
+        if (typeof window === 'undefined' || typeof window.location === 'undefined') {
+          return false;
+        }
+
+        // If `self.url` (aka "target") is falsy, then we don't need to worry about it.
+        if (typeof self.url !== 'string') { return false; }
+
+        // Get information about the "target" (`self.url`)
+        var targetProtocol = (function (){
+          try {
+            targetProtocol = self.url.match(/^([a-z]+:\/\/)/i)[1].toLowerCase();
+          }
+          catch (e) {}
+          targetProtocol = targetProtocol || 'http://';
+          return targetProtocol;
+        })();
+        var isTargetSSL = !!self.url.match('^https');
+        var targetPort = (function (){
+          try {
+            return self.url.match(/^[a-z]+:\/\/[^:]*:([0-9]*)/i)[1];
+          }
+          catch (e){}
+          return isTargetSSL ? '443' : '80';
+        })();
+        var targetAfterProtocol = self.url.replace(/^([a-z]+:\/\/)/i, '');
+
+
+        // If target protocol is different than the actual protocol,
+        // then we'll consider this cross-origin.
+        if (targetProtocol.replace(/[:\/]/g, '') !== window.location.protocol.replace(/[:\/]/g,'')) {
+          return true;
+        }
+
+
+        // If target hostname is different than actual hostname, we'll consider this cross-origin.
+        var hasSameHostname = targetAfterProtocol.search(window.location.hostname) === 0;
+        if (!hasSameHostname) {
+          return true;
+        }
+
+        // If no actual port is explicitly set on the `window.location` object,
+        // we'll assume either 80 or 443.
+        var isLocationSSL = window.location.protocol.match(/https/i);
+        var locationPort = (window.location.port+'') || (isLocationSSL ? '443' : '80');
+
+        // Finally, if ports don't match, we'll consider this cross-origin.
+        if (targetPort !== locationPort) {
+          return true;
+        }
+
+        // Otherwise, it's the same origin.
+        return false;
+
+      })();
+
+
+      // Prepare to start connecting the socket
+      (function selfInvoking (cb){
+
+        // If this is an attempt at a cross-origin or cross-port
+        // socket connection via a browswe, send a JSONP request
+        // first to ensure that a valid cookie is available.
+        // This can be disabled by setting `io.sails.useCORSRouteToGetCookie`
+        // to false.
+        //
+        // Otherwise, skip the stuff below.
+        //
+        if (!(self.useCORSRouteToGetCookie && isXOrigin)) {
+          return cb();
+        }
+
+        // Figure out the x-origin CORS route
+        // (Sails provides a default)
+        var xOriginCookieURL = self.url;
+        if (typeof self.useCORSRouteToGetCookie === 'string') {
+          xOriginCookieURL += self.useCORSRouteToGetCookie;
+        }
+        else {
+          xOriginCookieURL += '/__getcookie';
+        }
+
+        // Make the AJAX request (CORS)
+        jsonp({
+          url: xOriginCookieURL,
+          method: 'GET'
+        }, cb);
+
+      })(function goAheadAndActuallyConnect() {
+
+        // Now that we're ready to connect, create a raw underlying Socket
+        // using Socket.io and save it as `_raw` (this will start it connecting)
+        self._raw = io(self.url, self);
+
+        // If the low-level transport throws an error _while connecting_, then set the _isConnecting flag
+        // to false (since we're no longer connecting with any chance of success anyway).
+        // Also, in this case (and in dev mode only) log a helpful message.
+        self._raw.io.engine.transport.on('error', function(err){
+          if (!self._isConnecting) { return; }
+
+          self._isConnecting = false;
+
+          // Track this timestamp for use in reconnection messages
+          // (only relevant if reconnection is enabled.)
+          self.connectionErrorTimestamp = (new Date()).getTime();
+
+          // Development-only message:
+          consolog('====================================');
+          consolog('The socket was unable to connect.');
+          consolog('The server may be offline, or the');
+          consolog('socket may have failed authorization');
+          consolog('based on its origin or other factors.');
+          consolog('You may want to check the values of');
+          consolog('`sails.config.sockets.onlyAllowOrigins`');
+          consolog('or (more rarely) `sails.config.sockets.beforeConnect`');
+          consolog('in your app.');
+          consolog('More info: https://sailsjs.com/config/sockets');
+          consolog('For help: https://sailsjs.com/support');
+          consolog('');
+          consolog('Technical details:');
+          consolog(err);
+          consolog('====================================');
+        });
+
+        // Replay event bindings from the eager socket
+        self.replay();
+
+
+        /**
+         * 'connect' event is triggered when the socket establishes a connection
+         *  successfully.
+         */
+        self.on('connect', function socketConnected() {
+          self._isConnecting = false;
+          consolog.noPrefix(
+            '\n' +
+            '\n' +
+            // '    |>    ' + '\n' +
+            // '  \\___/  '+️
+            // '\n'+
+             '  |>    Now connected to '+(self.url ? self.url : 'Sails')+'.' + '\n' +
+            '\\___/   For help, see: http://bit.ly/2q0QDpf' + '\n' +
+             '        (using sails.io.js '+io.sails.sdk.platform+' SDK @v'+io.sails.sdk.version+')'+ '\n' +
+            '         Connected at: '+(new Date())+'\n'+
+            '\n'+
+            '\n'+
+            // '\n'+
+            ''
+            // ' ⚓︎ (development mode)'
+            // 'e.g. to send a GET request to Sails via WebSockets, run:'+ '\n' +
+            // '`io.socket.get("/foo", function serverRespondedWith (body, jwr) { console.log(body); })`'+ '\n' +
+          );
+        });
+
+        self.on('disconnect', function() {
+
+          // Get a timestamp of when the disconnect was detected.
+          self.connectionLostTimestamp = (new Date()).getTime();
+
+          // Get a shallow clone of the internal array of response callbacks, in case any of the callbacks mutate it.
+          var responseCbs = [].concat(self._responseCbs || []);
+          // Wipe the internal array of response callbacks before executing them, in case a callback happens to add
+          // a new request to the queue.
+          self._responseCbs = [];
+
+          // Do the same for the internal request context list.
+          var requestCtxs = [].concat(self._requestCtxs || []);
+          self._requestCtxs = [];
+
+          // Loop through the callbacks for all in-progress requests, and call them each with an error indicating the disconnect.
+          if (responseCbs.length) {
+            responseCbs.forEach(function(responseCb) {
+              responseCb(new Error('The socket disconnected before the request completed.'), {
+                body: null,
+                statusCode: 0,
+                headers: {}
+              });
+            });
+          }
+
+          // If there is a list of request contexts, indicate that their callbacks have been
+          // called and then wipe the list.  This prevents errors in the edge case of a response
+          // somehow coming back after the socket reconnects.
+          if (requestCtxs.length) {
+            requestCtxs.forEach(function(requestCtx) {
+              requestCtx.calledCb = true;
+            });
+          }
+
+          consolog('====================================');
+          consolog('Socket was disconnected from Sails.');
+          consolog('Usually, this is due to one of the following reasons:' + '\n' +
+            ' -> the server ' + (self.url ? self.url + ' ' : '') + 'was taken down' + '\n' +
+            ' -> your browser lost internet connectivity');
+          consolog('====================================');
+        });
+
+        self.on('reconnecting', function(numAttempts) {
+          consolog(
+            '\n'+
+            '        Socket is trying to reconnect to '+(self.url ? self.url : 'Sails')+'...\n'+
+            '_-|>_-  (attempt #' + numAttempts + ')'+'\n'+
+            '\n'
+          );
+        });
+
+        self.on('reconnect', function(transport, numAttempts) {
+          if (!self._isConnecting) {
+            self.on('connect', runRequestQueue.bind(self, self));
+          }
+
+          var msSinceLastOffline;
+          var numSecsOffline;
+          if (self.connectionLostTimestamp){
+            msSinceLastOffline = ((new Date()).getTime() - self.connectionLostTimestamp);
+            numSecsOffline = (msSinceLastOffline / 1000);
+          }
+          else if (self.connectionErrorTimestamp) {
+            msSinceLastOffline = ((new Date()).getTime() - self.connectionErrorTimestamp);
+            numSecsOffline = (msSinceLastOffline / 1000);
+          }
+          else {
+            msSinceLastOffline = '???';
+            numSecsOffline = '???';
+          }
+
+          consolog(
+            '\n'+
+             '  |>    Socket reconnected successfully after'+'\n'+
+            '\\___/   being offline at least ' + numSecsOffline + ' seconds.'+'\n'+
+            '\n'
+          );
+        });
+
+        // 'error' event is triggered if connection can not be established.
+        // (usually because of a failed authorization, which is in turn
+        // usually due to a missing or invalid cookie)
+        self.on('error', function failedToConnect(err) {
+          self._isConnecting = false;
+          ////////////////////////////////////////////////////////////////////////////////////
+          // Note:
+          // In the future, we could provide a separate event for when a socket cannot connect
+          // due to a failed `beforeConnect` (aka "authorization" if you're old school).
+          // this could probably be implemented by emitting a special event from the server.
+          ////////////////////////////////////////////////////////////////////////////////////
+
+          consolog(
+            'Failed to connect socket (possibly due to failed `beforeConnect` on server)',
+            'Error:', err
+          );
+        });
+      });
+
+    };
+
+    /**
+     * Reconnect the underlying socket.
+     *
+     * @api public
+     */
+    SailsSocket.prototype.reconnect = function (){
+      if (this._isConnecting) {
+        throw new Error('Cannot connect- socket is already connecting');
+      }
+      if (this.isConnected()) {
+        throw new Error('Cannot connect- socket is already connected');
+      }
+      return this._connect();
+    };
+
+    /**
+     * Disconnect the underlying socket.
+     *
+     * @api public
+     */
+    SailsSocket.prototype.disconnect = function (){
+      this._isConnecting = false;
+      if (!this.isConnected()) {
+        throw new Error('Cannot disconnect- socket is already disconnected');
+      }
+      return this._raw.disconnect();
+    };
+
+
+
+    /**
+     * isConnected
+     *
+     * @return {Boolean} whether the socket is connected and able to
+     *                   communicate w/ the server.
+     */
+
+    SailsSocket.prototype.isConnected = function () {
+      if (!this._raw) {
+        return false;
+      }
+
+      return !!this._raw.connected;
+    };
+
+
+    /**
+     * isConnecting
+     *
+     * @return {Boolean} whether the socket is in the process of connecting
+     *                   to the server.
+     */
+
+    SailsSocket.prototype.isConnecting = function () {
+      return this._isConnecting;
+    };
+
+    /**
+     * isConnecting
+     *
+     * @return {Boolean} flag that is `true` after a SailsSocket instance is
+     *                   initialized but before one tick of the event loop
+     *                   has passed (so that it hasn't attempted to connect
+     *                   yet, if autoConnect ends up being configured `true`)
+     */
+    SailsSocket.prototype.mightBeAboutToAutoConnect = function() {
+      return this._mightBeAboutToAutoConnect;
+    };
+
+    /**
+     * [replay description]
+     * @return {[type]} [description]
+     */
+    SailsSocket.prototype.replay = function (){
+      var self = this;
+
+      // Pass events and a reference to the request queue
+      // off to the self._raw for consumption
+      for (var evName in self.eventQueue) {
+        for (var i in self.eventQueue[evName]) {
+          self._raw.on(evName, self.eventQueue[evName][i]);
+        }
+      }
+
+      // Bind a one-time function to run the request queue
+      // when the self._raw connects.
+      if ( !self.isConnected() ) {
+        self._raw.once('connect', runRequestQueue.bind(self, self));
+      }
+      // Or run it immediately if self._raw is already connected
+      else {
+        runRequestQueue(self);
+      }
+
+      return self;
+    };
+
+
+    /**
+     * Chainable method to bind an event to the socket.
+     *
+     * @param  {String}   evName [event name]
+     * @param  {Function} fn     [event handler function]
+     * @return {SailsSocket}
+     */
+    SailsSocket.prototype.on = function (evName, fn){
+
+      // Bind the event to the raw underlying socket if possible.
+      if (this._raw) {
+        this._raw.on(evName, fn);
+        return this;
+      }
+
+      // Otherwise queue the event binding.
+      if (!this.eventQueue[evName]) {
+        this.eventQueue[evName] = [fn];
+      }
+      else {
+        this.eventQueue[evName].push(fn);
+      }
+
+      return this;
+    };
+
+    /**
+     * Chainable method to unbind an event from the socket.
+     *
+     * @param  {String}   evName [event name]
+     * @param  {Function} fn     [event handler function]
+     * @return {SailsSocket}
+     */
+    SailsSocket.prototype.off = function (evName, fn){
+
+      // Bind the event to the raw underlying socket if possible.
+      if (this._raw) {
+        this._raw.off(evName, fn);
+        return this;
+      }
+
+      // Otherwise queue the event binding.
+      if (this.eventQueue[evName] && this.eventQueue[evName].indexOf(fn) > -1) {
+        this.eventQueue[evName].splice(this.eventQueue[evName].indexOf(fn), 1);
+      }
+
+      return this;
+    };
+
+
+    /**
+     * Chainable method to unbind all events from the socket.
+     *
+     * @return {SailsSocket}
+     */
+    SailsSocket.prototype.removeAllListeners = function (){
+
+      // Bind the event to the raw underlying socket if possible.
+      if (this._raw) {
+        this._raw.removeAllListeners();
+        return this;
+      }
+
+      // Otherwise queue the event binding.
+      this.eventQueue = {};
+
+      return this;
+    };
 
     /**
      * Simulate a GET request to sails
@@ -383,11 +1237,11 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
      *
      * @api public
      * @param {String} url    ::    destination URL
-     * @param {Object} params ::    parameters to send with the request [optional]
+     * @param {Object} data   ::    parameters to send with the request [optional]
      * @param {Function} cb   ::    callback function to call when finished [optional]
      */
 
-    Socket.prototype.get = function(url, data, cb) {
+    SailsSocket.prototype.get = function(url, data, cb) {
 
       // `data` is optional
       if (typeof data === 'function') {
@@ -395,9 +1249,9 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
         data = {};
       }
 
-      return this._request({
+      return this.request({
         method: 'get',
-        data: data,
+        params: data,
         url: url
       }, cb);
     };
@@ -411,11 +1265,11 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
      *
      * @api public
      * @param {String} url    ::    destination URL
-     * @param {Object} params ::    parameters to send with the request [optional]
+     * @param {Object} data   ::    parameters to send with the request [optional]
      * @param {Function} cb   ::    callback function to call when finished [optional]
      */
 
-    Socket.prototype.post = function(url, data, cb) {
+    SailsSocket.prototype.post = function(url, data, cb) {
 
       // `data` is optional
       if (typeof data === 'function') {
@@ -423,7 +1277,7 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
         data = {};
       }
 
-      return this._request({
+      return this.request({
         method: 'post',
         data: data,
         url: url
@@ -439,11 +1293,11 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
      *
      * @api public
      * @param {String} url    ::    destination URL
-     * @param {Object} params ::    parameters to send with the request [optional]
+     * @param {Object} data   ::    parameters to send with the request [optional]
      * @param {Function} cb   ::    callback function to call when finished [optional]
      */
 
-    Socket.prototype.put = function(url, data, cb) {
+    SailsSocket.prototype.put = function(url, data, cb) {
 
       // `data` is optional
       if (typeof data === 'function') {
@@ -451,14 +1305,39 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
         data = {};
       }
 
-      return this._request({
+      return this.request({
         method: 'put',
-        data: data,
+        params: data,
         url: url
       }, cb);
     };
 
 
+    /**
+     * Simulate a PATCH request to sails
+     * e.g.
+     *    `socket.patch('/event/3', changedFields, $spinner.hide)`
+     *
+     * @api public
+     * @param {String} url    ::    destination URL
+     * @param {Object} data   ::    parameters to send with the request [optional]
+     * @param {Function} cb   ::    callback function to call when finished [optional]
+     */
+
+    SailsSocket.prototype.patch = function(url, data, cb) {
+
+      // `data` is optional
+      if (typeof data === 'function') {
+        cb = data;
+        data = {};
+      }
+
+      return this.request({
+        method: 'patch',
+        params: data,
+        url: url
+      }, cb);
+    };
 
     /**
      * Simulate a DELETE request to sails
@@ -467,11 +1346,11 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
      *
      * @api public
      * @param {String} url    ::    destination URL
-     * @param {Object} params ::    parameters to send with the request [optional]
+     * @param {Object} data   ::    parameters to send with the request [optional]
      * @param {Function} cb   ::    callback function to call when finished [optional]
      */
 
-    Socket.prototype['delete'] = function(url, data, cb) {
+    SailsSocket.prototype['delete'] = function(url, data, cb) {
 
       // `data` is optional
       if (typeof data === 'function') {
@@ -479,9 +1358,9 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
         data = {};
       }
 
-      return this._request({
+      return this.request({
         method: 'delete',
-        data: data,
+        params: data,
         url: url
       }, cb);
     };
@@ -491,34 +1370,129 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
     /**
      * Simulate an HTTP request to sails
      * e.g.
-     *    `socket.request('/user', newUser, $spinner.hide, 'post')`
+     * ```
+     * socket.request({
+     *   url:'/user',
+     *   params: {},
+     *   method: 'POST',
+     *   headers: {}
+     * }, function (responseBody, JWR) {
+     *   // ...
+     * });
+     * ```
      *
      * @api public
-     * @param {String} url    ::    destination URL
-     * @param {Object} params ::    parameters to send with the request [optional]
-     * @param {Function} cb   ::    callback function to call when finished [optional]
-     * @param {String} method ::    HTTP request method [optional]
+     * @option {String} url    ::    destination URL
+     * @option {Object} params ::    parameters to send with the request [optional]
+     * @option {Object} headers::    headers to send with the request [optional]
+     * @option {Function} cb   ::    callback function to call when finished [optional]
+     * @option {String} method ::    HTTP request method [optional]
      */
 
-    Socket.prototype.request = function(url, data, cb, method) {
+    SailsSocket.prototype.request = function(options, cb) {
 
-      // `cb` is optional
-      if (typeof cb === 'string') {
-        method = cb;
-        cb = null;
+      var usage =
+      'Usage:\n'+
+      'socket.request( options, [fnToCallWhenComplete] )\n\n'+
+      'options.url :: e.g. "/foo/bar"'+'\n'+
+      'options.method :: e.g. "get", "post", "put", or "delete", etc.'+'\n'+
+      'options.params :: e.g. { emailAddress: "mike@example.com" }'+'\n'+
+      'options.headers :: e.g. { "x-my-custom-header": "some string" }';
+      // Old usage:
+      // var usage = 'Usage:\n socket.'+(options.method||'request')+'('+
+      //   ' destinationURL, [dataToSend], [fnToCallWhenComplete] )';
+
+
+      // Validate options and callback
+      if (typeof cb !== 'undefined' && typeof cb !== 'function') {
+        throw new Error('Invalid callback function!\n' + usage);
+      }
+      if (typeof options !== 'object' || typeof options.url !== 'string') {
+        throw new Error('Invalid or missing URL!\n' + usage);
+      }
+      if (options.method && typeof options.method !== 'string') {
+        throw new Error('Invalid `method` provided (should be a string like "post" or "put")\n' + usage);
+      }
+      if (options.headers && typeof options.headers !== 'object') {
+        throw new Error('Invalid `headers` provided (should be a dictionary with string values)\n' + usage);
+      }
+      if (options.params && typeof options.params !== 'object') {
+        throw new Error('Invalid `params` provided (should be a dictionary with JSON-serializable values)\n' + usage);
+      }
+      if (options.data && typeof options.data !== 'object') {
+        throw new Error('Invalid `data` provided (should be a dictionary with JSON-serializable values)\n' + usage);
       }
 
-      // `data` is optional
-      if (typeof data === 'function') {
-        cb = data;
-        data = {};
+      // Accept either `params` or `data` for backwards compatibility (but not both!)
+      if (options.data && options.params) {
+        throw new Error('Cannot specify both `params` and `data`!  They are aliases of each other.\n' + usage);
+      }
+      else if (options.data) {
+        options.params = options.data;
+        delete options.data;
       }
 
-      return this._request({
-        method: method || 'get',
-        data: data,
-        url: url
-      }, cb);
+
+      // If this socket is not connected yet, queue up this request
+      // instead of sending it.
+      // (so it can be replayed when the socket comes online.)
+      if ( ! this.isConnected() ) {
+
+        // If no queue array exists for this socket yet, create it.
+        this.requestQueue = this.requestQueue || [];
+        this.requestQueue.push([options, cb]);
+        return;
+      }
+
+      // Otherwise, our socket is connected, so continue prepping
+      // the request.
+
+      // Default headers to an empty object
+      options.headers = options.headers || {};
+
+      // Build a simulated request object
+      // (and sanitize/marshal options along the way)
+      var requestCtx = {
+
+        method: (options.method || 'get').toLowerCase(),
+
+        headers: options.headers,
+
+        data: options.params || options.data || {},
+
+        // Remove trailing slashes and spaces to make packets smaller.
+        url: options.url.replace(/^(.+)\/*\s*$/, '$1'),
+
+        cb: cb
+      };
+
+      // Get a reference to the callback list, or create a new one.
+      this._responseCbs = this._responseCbs || [];
+
+      // Get a reference to the request context list, or create a new one.
+      this._requestCtxs = this._requestCtxs || [];
+
+      // Add this callback to the list.  If the socket disconnects, we'll call
+      // each cb in the list with an error and reset the list.  Otherwise the
+      // cb will be removed from the list when the server responds.
+      // Also add the request context to the list.  It will be removed once
+      // the response comes back, or if the socket disconnects.
+      if (cb) {
+        this._responseCbs.push(cb);
+        this._requestCtxs.push(requestCtx);
+      }
+
+      // Merge global headers in, if there are any.
+      if (this.headers && 'object' === typeof this.headers) {
+        for (var header in this.headers) {
+          if (!options.headers.hasOwnProperty(header)) {
+            options.headers[header] = this.headers[header];
+          }
+        }
+      }
+
+      // Send the request.
+      _emitFrom(this, requestCtx);
     };
 
 
@@ -532,291 +1506,234 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
      * @param  {[type]}   options [description]
      * @param  {Function} cb      [description]
      */
-    Socket.prototype._request = function(options, cb) {
-
-      // Sanitize options (also data & headers)
-      var usage = 'Usage:\n socket.' +
-        (options.method || 'request') +
-        '( destinationURL, [dataToSend], [fnToCallWhenComplete] )';
-
-      options = options || {};
-      options.data = options.data || {};
-      options.headers = options.headers || {};
-
-      // Remove trailing slashes and spaces to make packets smaller.
-      options.url = options.url.replace(/^(.+)\/*\s*$/, '$1');
-      if (typeof options.url !== 'string') {
-        throw new Error('Invalid or missing URL!\n' + usage);
-      }
-
-      // Build a simulated request object.
-      var request = {
-        method: options.method,
-        data: options.data,
-        url: options.url,
-        headers: options.headers,
-        cb: cb
-      };
-
-      // If this socket is not connected yet, queue up this request
-      // instead of sending it.
-      // (so it can be replayed when the socket comes online.)
-      if (!_isConnected(this)) {
-
-        // If no queue array exists for this socket yet, create it.
-        this.requestQueue = this.requestQueue || [];
-        this.requestQueue.push(request);
-        return;
-      }
-
-
-      // Otherwise, our socket is ok!
-      // Send the request.
-      _emitFrom(this, request);
+    SailsSocket.prototype._request = function(options, cb) {
+      throw new Error('`_request()` was a private API deprecated as of v0.11 of the sails.io.js client. Use `.request()` instead.');
     };
 
 
 
-    // Set a `sails` object that may be used for configuration before the
-    // first socket connects (i.e. to prevent auto-connect)
+
+
+
+
+    //  ██╗ ██████╗    ███████╗ █████╗ ██╗██╗     ███████╗
+    //  ██║██╔═══██╗   ██╔════╝██╔══██╗██║██║     ██╔════╝
+    //  ██║██║   ██║   ███████╗███████║██║██║     ███████╗
+    //  ██║██║   ██║   ╚════██║██╔══██║██║██║     ╚════██║
+    //  ██║╚██████╔╝██╗███████║██║  ██║██║███████╗███████║
+    //  ╚═╝ ╚═════╝ ╚═╝╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝
+    //
+    // Set an `io.sails` object that may be used for configuration before the
+    // first socket connects (i.e. to allow auto-connect behavior to be
+    // prevented by setting `io.sails.autoConnect` in an inline script
+    // directly after the script tag which loaded this file).
+
+
+    //  ┌─┐┌─┐┌┬┐  ┬ ┬┌─┐  ╔╦╗╔═╗╔═╗╔═╗╦ ╦╦ ╔╦╗╔═╗  ┌─┐┌─┐┬─┐  ┬┌─┐ ┌─┐┌─┐┬┬  ┌─┐
+    //  └─┐├┤  │   │ │├─┘   ║║║╣ ╠╣ ╠═╣║ ║║  ║ ╚═╗  ├┤ │ │├┬┘  ││ │ └─┐├─┤││  └─┐
+    //  └─┘└─┘ ┴   └─┘┴    ═╩╝╚═╝╚  ╩ ╩╚═╝╩═╝╩ ╚═╝  └  └─┘┴└─  ┴└─┘o└─┘┴ ┴┴┴─┘└─┘
     io.sails = {
 
       // Whether to automatically connect a socket and save it as `io.socket`.
       autoConnect: true,
 
-      // Whether to use JSONP to get a cookie for cross-origin requests
+      // Whether to automatically try to reconnect after connection is lost
+      reconnection: false,
+
+      // The route (path) to hit to get a x-origin (CORS) cookie
+      // (or true to use the default: '/__getcookie')
       useCORSRouteToGetCookie: true,
 
       // The environment we're running in.
       // (logs are not displayed when this is set to 'production')
-      // 
-      // Defaults to development unless this script was fetched from a URL
-      // that ends in `*.min.js` or '#production' (may also be manually overridden.)
-      // 
-      environment: urlThisScriptWasFetchedFrom.match(/(\#production|\.min\.js)/) ? 'production' : 'development'
+      //
+      // Defaults to "development" unless this script was fetched from a URL
+      // that ends in `*.min.js` or '#production', or if the conventional
+      // `SAILS_LOCALS` global is set with an `_environment` of "production"
+      // or "staging".  (This setting may also be manually overridden.)
+      environment: (
+        urlThisScriptWasFetchedFrom.match(/(\#production|\.min\.js)/g) ||
+        (
+          typeof window === 'object' && window &&
+          typeof window.SAILS_LOCALS === 'object' && window.SAILS_LOCALS &&
+          (window.SAILS_LOCALS._environment === 'staging' || window.SAILS_LOCALS._environment === 'production')
+        )
+      )? 'production' : 'development',
+
+      // The version of this sails.io.js client SDK
+      sdk: SDK_INFO,
+
+      // Transports to use when communicating with the server, in the order they will be tried
+      transports: ['websocket']
     };
 
 
 
+    //  ┌─┐─┐ ┬┌┬┐┌─┐┌┐┌┌┬┐  ┬┌─┐ ┌─┐┌─┐┬┬  ┌─┐  ┌┬┐┌─┐┌─┐┌─┐┬ ┬┬ ┌┬┐┌─┐
+    //  ├┤ ┌┴┬┘ │ ├┤ │││ ││  ││ │ └─┐├─┤││  └─┐   ││├┤ ├┤ ├─┤│ ││  │ └─┐
+    //  └─┘┴ └─ ┴ └─┘┘└┘─┴┘  ┴└─┘o└─┘┴ ┴┴┴─┘└─┘  ─┴┘└─┘└  ┴ ┴└─┘┴─┘┴ └─┘
+    //  ┬ ┬┬┌┬┐┬ ┬  ┌┬┐┬ ┬┌─┐  ╦ ╦╔╦╗╔╦╗╦    ╔═╗╔╦╗╔╦╗╦═╗╦╔╗ ╦ ╦╔╦╗╔═╗╔═╗
+    //  ││││ │ ├─┤   │ ├─┤├┤   ╠═╣ ║ ║║║║    ╠═╣ ║  ║ ╠╦╝║╠╩╗║ ║ ║ ║╣ ╚═╗
+    //  └┴┘┴ ┴ ┴ ┴   ┴ ┴ ┴└─┘  ╩ ╩ ╩ ╩ ╩╩═╝  ╩ ╩ ╩  ╩ ╩╚═╩╚═╝╚═╝ ╩ ╚═╝╚═╝
+    //  ┌─┐┬─┐┌─┐┌┬┐  ┌┬┐┬ ┬┌─┐  ┌─┐┌─┐┬─┐┬┌─┐┌┬┐  ┌┬┐┌─┐┌─┐
+    //  ├┤ ├┬┘│ ││││   │ ├─┤├┤   └─┐│  ├┬┘│├─┘ │    │ ├─┤│ ┬
+    //  └  ┴└─└─┘┴ ┴   ┴ ┴ ┴└─┘  └─┘└─┘┴└─┴┴   ┴    ┴ ┴ ┴└─┘
+    //
+    // Now fold in config provided as HTML attributes on the script tag:
+    // (note that if `io.sails.*` is changed after this script, those changes
+    //  will still take precedence)
+    CONFIGURABLE_VIA_HTML_ATTR.forEach(function (configKey){
+      if (typeof scriptTagConfig[configKey] !== 'undefined') {
+        io.sails[configKey] = scriptTagConfig[configKey];
+      }
+    });
+    //////////////////////////////////////////////////////////////////////////////
+    // Note that the new HTML attribute configuration style may eventually
+    // completely replace the original approach of setting `io.sails` properties,
+    // since the new strategy is easier to reason about.  Also, it would allow us
+    // to remove the timeout below someday.
+    //////////////////////////////////////////////////////////////////////////////
+
+
+
+
+    //  ┬┌─┐ ┌─┐┌─┐┬┬  ┌─┐ ╔═╗╔═╗╔╗╔╔╗╔╔═╗╔═╗╔╦╗  /  \
+    //  ││ │ └─┐├─┤││  └─┐ ║  ║ ║║║║║║║║╣ ║   ║  /   /
+    //  ┴└─┘o└─┘┴ ┴┴┴─┘└─┘o╚═╝╚═╝╝╚╝╝╚╝╚═╝╚═╝ ╩  \  /
+
     /**
-     * Override `io.connect` to coerce it into using the io.sails
-     * connection URL config, as well as sending identifying information
-     * (most importantly, the current version of this SDK)
+     * Add `io.sails.connect` function as a wrapper for the built-in `io()` aka `io.connect()`
+     * method, returning a SailsSocket. This special function respects the configured io.sails
+     * connection URL, as well as sending other identifying information (most importantly, the
+     * current version of this SDK).
      *
      * @param  {String} url  [optional]
      * @param  {Object} opts [optional]
      * @return {Socket}
      */
-    io.sails._origConnectFn = io.connect;
-    io.connect = function(url, opts) {
+    io.sails.connect = function(url, opts) {
+
+      // Make URL optional
+      if ('object' === typeof url) {
+        opts = url;
+        url = null;
+      }
+
+      // Default opts to empty object
       opts = opts || {};
 
-      // If explicit connection url is specified, use it
-      url = url || io.sails.url || undefined;
+      // If explicit connection url is specified, save it to options
+      opts.url = url || opts.url || undefined;
 
-      // Ensure URL has no trailing slash
-      url = url ? url.replace(/(\/)$/, '') : undefined;
-
-      // Mix the current SDK version into the query string in
-      // the connection request to the server:
-      if (typeof opts.query !== 'string') opts.query = SDK_INFO.versionString;
-      else opts.query += '&' + SDK_INFO.versionString;
-
-      return io.sails._origConnectFn(url, opts);
-
+      // Instantiate and return a new SailsSocket- and try to connect immediately.
+      var socket = new SailsSocket(opts);
+      socket._connect();
+      return socket;
     };
 
 
 
+
+
+
+    //  ██╗ ██████╗    ███████╗ ██████╗  ██████╗██╗  ██╗███████╗████████╗
+    //  ██║██╔═══██╗   ██╔════╝██╔═══██╗██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝
+    //  ██║██║   ██║   ███████╗██║   ██║██║     █████╔╝ █████╗     ██║
+    //  ██║██║   ██║   ╚════██║██║   ██║██║     ██╔═██╗ ██╔══╝     ██║
+    //  ██║╚██████╔╝██╗███████║╚██████╔╝╚██████╗██║  ██╗███████╗   ██║
+    //  ╚═╝ ╚═════╝ ╚═╝╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝
+    //
     // io.socket
-    // 
+    //
     // The eager instance of Socket which will automatically try to connect
     // using the host that this js file was served from.
-    // 
-    // This can be disabled or configured by setting `io.socket.options` within the
+    //
+    // This can be disabled or configured by setting properties on `io.sails.*` within the
     // first cycle of the event loop.
-    // 
+    //
 
-    // In the mean time, this eager socket will be defined as a TmpSocket
-    // so that events bound by the user before the first cycle of the event
-    // loop (using `.on()`) can be rebound on the true socket.
-    io.socket = new TmpSocket();
+
+    // Build `io.socket` so it exists
+    // (note that this DOES NOT start the connection process)
+    io.socket = new SailsSocket();
+    //
+    // This socket is not connected yet, and has not even _started_ connecting.
+    //
+    // But in the mean time, this eager socket will be queue events bound by the user
+    // before the first cycle of the event loop (using `.on()`), which will later
+    // be rebound on the raw underlying socket.
+
+
+    //  ┌─┐┌─┐┌┬┐  ┌─┐┬ ┬┌┬┐┌─┐   ┌─┐┌─┐┌┐┌┌┐┌┌─┐┌─┐┌┬┐  ┌┬┐┬┌┬┐┌─┐┬─┐
+    //  └─┐├┤  │   ├─┤│ │ │ │ │───│  │ │││││││├┤ │   │    │ ││││├┤ ├┬┘
+    //  └─┘└─┘ ┴   ┴ ┴└─┘ ┴ └─┘   └─┘└─┘┘└┘┘└┘└─┘└─┘ ┴    ┴ ┴┴ ┴└─┘┴└─
+    // If configured to do so, start auto-connecting after the first cycle of the event loop
+    // has completed (to allow time for this behavior to be configured/disabled
+    // by specifying properties on `io.sails`)
+
+    // Indicate that the autoConnect timer has started.
+    io.socket._mightBeAboutToAutoConnect = true;
 
     setTimeout(function() {
 
-      // If autoConnect is disabled, delete the TmpSocket and bail out.
-      if (!io.sails.autoConnect) {
+      // Indicate that the autoConect timer fired.
+      io.socket._mightBeAboutToAutoConnect = false;
+
+      // If autoConnect is disabled, delete the eager socket (io.socket) and bail out.
+      if (io.sails.autoConnect === false || io.sails.autoconnect === false) {
         delete io.socket;
-        return io;
+        return;
       }
 
-      // If this is an attempt at a cross-origin or cross-port
-      // socket connection, send an AJAX request first to ensure
-      // that a valid cookie is available.  This can be disabled
-      // by setting `io.sails.useCORSRouteToGetCookie` to false.
-      var isXOrigin = io.sails.url && true; //url.match();
-      // TODO: check whether the URL is cross-domain
+      // consolog('Eagerly auto-connecting socket to Sails... (requests will be queued in the mean-time)');
+      io.socket._connect();
 
-      // var port = global.location.port || ('https:' == global.location.protocol ? 443 : 80);
-      // this.options.host !== global.location.hostname || this.options.port != port;
-      if (io.sails.useCORSRouteToGetCookie && isXOrigin) {
-
-        // Figure out the x-origin CORS route
-        // (Sails provides a default)
-        var xOriginCookieRoute = '/__getcookie';
-        if (typeof io.sails.useCORSRouteToGetCookie === 'string') {
-          xOriginCookieRoute = io.sails.useCORSRouteToGetCookie;
-        }
-
-        var xOriginCookieURL = io.sails.url + xOriginCookieRoute;
-
-        // Make the AJAX request (CORS)
-        if (typeof window !== 'undefined') {
-
-          ajax({
-            url: xOriginCookieURL,
-            method: 'GET'
-          }, goAheadAndActuallyConnect);
-
-        }
-
-        // If there's no `window` object, we must be running in Node.js
-        // so just require the request module and send the HTTP request that
-        // way.
-        else {
-          var mikealsReq = require('request');
-          mikealsReq.get(io.sails.url + xOriginCookieRoute, function(err, httpResponse, body) {
-            if (err) {
-              consolog(
-                'Failed to connect socket (failed to get cookie)',
-                'Error:', err
-              );
-              return;
-            }
-            goAheadAndActuallyConnect();
-          });
-        }
-      } else goAheadAndActuallyConnect();
-
-      // Start connecting after the current cycle of the event loop
-      // has completed.
-      // consolog('Auto-connecting `io.socket` to Sails... (requests will be queued in the mean-time)');
-      function goAheadAndActuallyConnect() {
-
-        // Initiate connection
-        var actualSocket = io.connect(io.sails.url);
-
-        // Replay event bindings from the existing TmpSocket
-        io.socket = io.socket.become(actualSocket);
-
-
-        /**
-         * 'connect' event is triggered when the socket establishes a connection
-         *  successfully.
-         */
-        io.socket.on('connect', function socketConnected() {
-
-          consolog.noPrefix(
-            '\n' +
-            '    |>    ' + '\n' +
-            '  \\___/  '
-          );
-          consolog(
-            '`io.socket` connected successfully.' + '\n' +
-            // 'e.g. to send a GET request to Sails via WebSockets, run:'+ '\n' +
-            // '`io.socket.get("/foo", function serverRespondedWith (body, jwr) { console.log(body); })`'+ '\n' +
-            ' (for help, see: http://sailsjs.org/#!documentation/reference/BrowserSDK/BrowserSDK.html)'
-          );
-          // consolog('(this app is running in development mode - log messages will be displayed)');
-
-
-          if (!io.socket.$events.disconnect) {
-            io.socket.on('disconnect', function() {
-              consolog('====================================');
-              consolog('io.socket was disconnected from Sails.');
-              consolog('Usually, this is due to one of the following reasons:' + '\n' +
-                ' -> the server ' + (io.sails.url ? io.sails.url + ' ' : '') + 'was taken down' + '\n' +
-                ' -> your browser lost internet connectivity');
-              consolog('====================================');
-            });
-          }
-
-          if (!io.socket.$events.reconnect) {
-            io.socket.on('reconnect', function(transport, numAttempts) {
-              var numSecsOffline = io.socket.msSinceConnectionLost / 1000;
-              consolog(
-                'io.socket reconnected successfully after being offline ' +
-                'for ' + numSecsOffline + ' seconds.');
-            });
-          }
-
-          if (!io.socket.$events.reconnecting) {
-            io.socket.on('reconnecting', function(msSinceConnectionLost, numAttempts) {
-              io.socket.msSinceConnectionLost = msSinceConnectionLost;
-              consolog(
-                'io.socket is trying to reconnect to Sails...' +
-                '(attempt #' + numAttempts + ')');
-            });
-          }
-
-
-          // 'error' event is triggered if connection can not be established.
-          // (usually because of a failed authorization, which is in turn
-          // usually due to a missing or invalid cookie)
-          if (!io.socket.$events.error) {
-            io.socket.on('error', function failedToConnect(err) {
-
-              // TODO:
-              // handle failed connections due to failed authorization
-              // in a smarter way (probably can listen for a different event)
-
-              // A bug in Socket.io 0.9.x causes `connect_failed`
-              // and `reconnect_failed` not to fire.
-              // Check out the discussion in github issues for details:
-              // https://github.com/LearnBoost/socket.io/issues/652
-              // io.socket.on('connect_failed', function () {
-              //  consolog('io.socket emitted `connect_failed`');
-              // });
-              // io.socket.on('reconnect_failed', function () {
-              //  consolog('io.socket emitted `reconnect_failed`');
-              // });
-
-              consolog(
-                'Failed to connect socket (probably due to failed authorization on server)',
-                'Error:', err
-              );
-            });
-          }
-        });
-
-      }
-
-
-
-      // TODO:
-      // Listen for a special private message on any connected that allows the server
-      // to set the environment (giving us 100% certainty that we guessed right)
-      // However, note that the `console.log`s called before and after connection
-      // are still forced to rely on our existing heuristics (to disable, tack #production
-      // onto the URL used to fetch this file.)
 
     }, 0); // </setTimeout>
 
 
     // Return the `io` object.
     return io;
-  }
+  } //</SailsIOClient>
+
+  //
+  /////////////////////////////////////////////////////////////////////////////////
+  ///// </bunches of private function definitions, constructors, and methods>
+  /////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+  //  ███████╗██╗  ██╗██████╗  ██████╗ ███████╗███████╗    ███████╗██████╗ ██╗  ██╗
+  //  ██╔════╝╚██╗██╔╝██╔══██╗██╔═══██╗██╔════╝██╔════╝    ██╔════╝██╔══██╗██║ ██╔╝
+  //  █████╗   ╚███╔╝ ██████╔╝██║   ██║███████╗█████╗      ███████╗██║  ██║█████╔╝
+  //  ██╔══╝   ██╔██╗ ██╔═══╝ ██║   ██║╚════██║██╔══╝      ╚════██║██║  ██║██╔═██╗
+  //  ███████╗██╔╝ ██╗██║     ╚██████╔╝███████║███████╗    ███████║██████╔╝██║  ██╗
+  //  ╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝╚══════╝    ╚══════╝╚═════╝ ╚═╝  ╚═╝
+  //
 
 
   // Add CommonJS support to allow this client SDK to be used from Node.js.
-  if (typeof module === 'object' && typeof module.exports !== 'undefined') {
+  if (SDK_INFO.platform === 'node') {
     module.exports = SailsIOClient;
-    return SailsIOClient;
+  }
+  // Add AMD support, registering this client SDK as an anonymous module.
+  else if (typeof define === 'function' && define.amd) {
+    define([], function() {
+      return SailsIOClient;
+    });
+  }
+  else {
+    // Otherwise, try to instantiate the client using the global `io`:
+    SailsIOClient();
+
+    // Note:
+    // If you are modifying this file manually to wrap an existing socket.io client
+    // (e.g. to prevent pollution of the global namespace), you can replace the global
+    // `io` with your own `io` instance above.
   }
 
-  // Otherwise, try to instantiate the client:
-  // In case you're wrapping the socket.io client to prevent pollution of the
-  // global namespace, you can replace the global `io` with your own `io` here:
-  return SailsIOClient();
-
 })();
+;
+
+/* eslint-enable */
